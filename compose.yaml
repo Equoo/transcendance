@@ -33,7 +33,7 @@ services:
     networks:
       - frontend-backend
     environment:
-      - API_URL=http://keepgouped-backend:8080
+      - API_URL=http://keepgrouped-backend:8080
     ports:
       - 4242:80
 
