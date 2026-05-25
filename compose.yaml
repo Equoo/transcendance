@@ -1,0 +1,43 @@
+services:
+  backend:
+    image: forgejo.asventi.net/transcendance/backend:latest
+    container_name: keepgrouped-backend
+    hostname: keepgrouped-backend
+    networks:
+      - frontend-backend
+      - backend-database
+    ports:
+      - 4243:8080
+
+  database:
+    image: postgres:alpine
+    container_name: keepgrouped-database
+    hostname: keepgrouped-database
+    shm_size: 128mb
+    volumes:
+      - database:/db:rw
+    networks:
+      - backend-database
+    environment:
+      - POSTGRES_PASSWORD=test
+      - PGDATA=/db
+
+  frontend:
+    image: forgejo.asventi.net/transcendance/frontend:latest
+    container_name: keepgrouped-frontend
+    hostname: keepgrouped-frontend
+    networks:
+      - frontend-backend
+    environment:
+      - API_URL=http://keepgouped-backend:8080
+    ports:
+      - 4242:80
+
+networks:
+  backend-database:
+    name: keepgouped-backend-database
+  frontend-backend:
+    name: keepgouped-frontend-backend
+
+volumes:
+  database:
