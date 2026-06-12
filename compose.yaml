@@ -37,6 +37,29 @@ services:
     ports:
       - 4242:80
 
+  WAF:
+    image: owasp/modsecurity-crs:nginx
+    container_name: keepgrouped-waf
+    hostname: keepgrouped-waf
+    depends_on: #WAF proxies to both of thos
+     - backend
+     - frontend
+    networks:
+     - frontend-backend
+    volumes:
+      - ./cyber/modsecurity:/etc/modsecurity.d/custom:ro
+      - ./cyber/nginx/audit:/var/log/nginx:rw
+    environment:
+      - MODSEC_RULE_ENGINE=On
+      - PARANOIA=1
+      - ANOMALY_INBOUND=5
+      - ANOMALY_OUTBOUND=4
+      - BACKEND=http://keepgrouped-frontend:80
+      - NGINX_ALWAYS_TLS_REDIRECT=on
+    ports:
+     - "443:8443"
+     - "80:8080"
+
 networks:
   backend-database:
     name: keepgrouped-backend-database
