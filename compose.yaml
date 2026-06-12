@@ -39,9 +39,9 @@ services:
 
 networks:
   backend-database:
-    name: keepgouped-backend-database
+    name: keepgrouped-backend-database
   frontend-backend:
-    name: keepgouped-frontend-backend
+    name: keepgrouped-frontend-backend
 
 volumes:
   database:
