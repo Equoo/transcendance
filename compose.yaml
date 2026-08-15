@@ -1,4 +1,4 @@
-ervices:
+services:
   backend:
     image: forgejo.asventi.net/transcendance/backend:latest
     container_name: keepgrouped-backend
@@ -10,7 +10,16 @@ ervices:
       - frontend-backend
       - backend-database
     environment:
-      - ConnectionStrings__DefaultConnection=Host=keepgrouped-database;Database=keepgrouped;Username=keepgrouped;Password=changeme;
+      # Fill password with db password
+      - ConnectionStrings__DefaultConnection=Host=keepgrouped-database;Database=keepgrouped;Username=keepgrouped;Password=;
+      - Storage__ServiceUrl=http://garage:3900
+      - Storage__Region=garage
+      - Storage__BucketName=keepgrouped-bucket
+      # Fill with garage access key
+      - Storage__AccessKey=
+
+      # Fill with garage secret key
+      - Storage__SecretKey=
 
   database:
     container_name: keepgrouped-database
@@ -31,8 +40,28 @@ ervices:
     environment:
       - POSTGRES_DB=keepgrouped
       - POSTGRES_USER=keepgrouped
-      - POSTGRES_PASSWORD=changeme
+
+      # Fille me
+      - POSTGRES_PASSWORD=
       - PGDATA=/db
+
+  garage:
+    image: dxflrs/garage:v2.3.0
+    command: /garage server --single-node --default-bucket
+    hostname: keepgrouped-storage-dev
+    environment:
+      # Fill me
+      GARAGE_DEFAULT_ACCESS_KEY:
+
+      # Atleast 32 char random key
+      GARAGE_DEFAULT_SECRET_KEY:
+      GARAGE_DEFAULT_BUCKET: keepgrouped-bucket
+      # Atleast 64 char random key
+      GARAGE_RPC_SECRET:
+    volumes:
+      - ./garage/garage.toml:/etc/garage.toml
+    networks:
+      - backend-database
 
   frontend:
     image: forgejo.asventi.net/transcendance/frontend:latest
