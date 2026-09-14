@@ -21,6 +21,11 @@ services:
       # Fill with garage secret key
       - Storage__SecretKey=
 
+      - Authentication__DefaultAdminLogin=
+      - Authentication__DefaultAdminPwd=
+      # 256 bits random key: cat /dev/urandom | head -c 256 | sha256sum
+      - Authentication__JWTKey=
+
   database:
     container_name: keepgrouped-database
     hostname: keepgrouped-database
