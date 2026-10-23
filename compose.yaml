@@ -1,6 +1,6 @@
 services:
   backend:
-    image: forgejo.asventi.net/transcendance/backend:latest
+    image: forgejo.asventi.net/transcendence/backend:latest
     container_name: keepgrouped-backend
     hostname: keepgrouped-backend
     depends_on:
@@ -69,7 +69,7 @@ services:
       - backend-database
 
   frontend:
-    image: forgejo.asventi.net/transcendance/frontend:latest
+    image: forgejo.asventi.net/transcendence/frontend:latest
     container_name: keepgrouped-frontend
     hostname: keepgrouped-frontend
     depends_on:
