@@ -81,32 +81,32 @@ services:
     ports:
       - 4242:443
 
-llama:
-  hostname: "llama"
-  image: forgejo.asventi.net/transcendence/keepgrouped-llama.cpp:latest
-  networks:
-    - backend-database
+  llama:
+    hostname: "llama"
+    image: forgejo.asventi.net/transcendence/keepgrouped-llama.cpp:latest
+    networks:
+      - backend-database
 
-backend-ia:
-  hostname: "ai-back-dev"
-  image: forgejo.asventi.net/transcendence/backend-ai:latest
-  networks:
-    - backend-database
-  environment:
-    - LLAMACPP_API_BASE_URL=http://llama:9931/v1
-    - LLAMACPP_API_KEY=""
-  depends_on:
-    - chromadb
+  backend-ia:
+    hostname: "ai-back-dev"
+    image: forgejo.asventi.net/transcendence/backend-ai:latest
+    networks:
+      - backend-database
+    environment:
+      - LLAMACPP_API_BASE_URL=http://llama:9931/v1
+      - LLAMACPP_API_KEY=""
+    depends_on:
+      - chromadb
 
-chromadb:
-  hostname: "chroma"
-  image: chromadb/chroma:latest
-  volumes:
-    - ./chroma_data:/chroma/chroma
-  environment:
-    ANONYMIZED_TELEMETRY: "false"
-  networks:
-    - backend-database
+  chromadb:
+    hostname: "chroma"
+    image: chromadb/chroma:latest
+    volumes:
+      - ./chroma_data:/chroma/chroma
+    environment:
+      ANONYMIZED_TELEMETRY: "false"
+    networks:
+      - backend-database
 
 networks:
   backend-database:
