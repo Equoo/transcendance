@@ -65,6 +65,7 @@ services:
       GARAGE_RPC_SECRET:
     volumes:
       - ./garage/garage.toml:/etc/garage.toml
+      - storage:/storage
     networks:
       - backend-database
 
@@ -116,3 +117,4 @@ networks:
 
 volumes:
   database:
+  storage:
