@@ -1,43 +1,59 @@
 services:
+  frontend:
+    image: forgejo.asventi.net/transcendance/frontend:latest
+    container_name: keepgrouped-frontend
+    hostname: keepgrouped-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - frontend-backend
+    environment:
+      - API_URL=http://keepgrouped-backend:8080
+      - SERVER_NAME=${SERVER_NAME:-localhost}
+    ports:
+      - ${PORT:-4242}:443
+
   backend:
-    image: forgejo.asventi.net/transcendence/backend:latest
+    image: forgejo.asventi.net/transcendance/backend:latest
     container_name: keepgrouped-backend
     hostname: keepgrouped-backend
+    restart: unless-stopped
     depends_on:
       database:
         condition: service_healthy
+      garage:
+        condition: service_started
+      ai-backend:
+        condition: service_started
     networks:
       - frontend-backend
       - backend-database
+      - backend-ai
     environment:
-      # Fill password with db password
-      - ConnectionStrings__DefaultConnection=Host=keepgrouped-database;Database=keepgrouped;Username=keepgrouped;Password=;
-      - Storage__ServiceUrl=http://garage:3900
+      - ConnectionStrings__DefaultConnection=Host=keepgrouped-database;Database=keepgrouped;Username=keepgrouped;Password=${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      - Storage__ServiceUrl=http://keepgrouped-storage:3900
       - Storage__Region=garage
       - Storage__BucketName=keepgrouped-bucket
-      # Fill with garage access key
-      - Storage__AccessKey=
-
-      # Fill with garage secret key
-      - Storage__SecretKey=
-
-      - Authentication__DefaultAdminLogin=
-      - Authentication__DefaultAdminPwd=
-      # 256 bits random key: cat /dev/urandom | head -c 256 | sha256sum
-      - Authentication__JWTKey=
+      - Storage__AccessKey=${GARAGE_ACCESS_KEY:?set GARAGE_ACCESS_KEY in .env}
+      - Storage__SecretKey=${GARAGE_SECRET_KEY:?set GARAGE_SECRET_KEY in .env}
+      - Authentication__DefaultAdminLogin=${ADMIN_LOGIN:?set ADMIN_LOGIN in .env}
+      - Authentication__DefaultAdminEmail=${ADMIN_EMAIL:?set ADMIN_EMAIL in .env}
+      - Authentication__DefaultAdminPwd=${ADMIN_PASSWORD:?set ADMIN_PASSWORD in .env}
+      - Authentication__JWTKey=${JWT_KEY:?set JWT_KEY in .env}
 
   database:
+    image: postgres:alpine
     container_name: keepgrouped-database
     hostname: keepgrouped-database
-    image: postgres:alpine
+    restart: unless-stopped
     shm_size: 128mb
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U keepgrouped" ]
+      test: ["CMD-SHELL", "pg_isready -U keepgrouped"]
       interval: 2s
       timeout: 10s
       retries: 5
       start_period: 2s
-
     volumes:
       - database:/db:rw
     networks:
@@ -45,76 +61,76 @@ services:
     environment:
       - POSTGRES_DB=keepgrouped
       - POSTGRES_USER=keepgrouped
-
-      # Fille me
-      - POSTGRES_PASSWORD=
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
       - PGDATA=/db
 
   garage:
     image: dxflrs/garage:v2.3.0
+    container_name: keepgrouped-storage
+    hostname: keepgrouped-storage
+    restart: unless-stopped
     command: /garage server --single-node --default-bucket
-    hostname: keepgrouped-storage-dev
     environment:
-      # Fill me
-      GARAGE_DEFAULT_ACCESS_KEY:
-
-      # Atleast 32 char random key
-      GARAGE_DEFAULT_SECRET_KEY:
+      GARAGE_DEFAULT_ACCESS_KEY: ${GARAGE_ACCESS_KEY:?set GARAGE_ACCESS_KEY in .env}
+      GARAGE_DEFAULT_SECRET_KEY: ${GARAGE_SECRET_KEY:?set GARAGE_SECRET_KEY in .env}
       GARAGE_DEFAULT_BUCKET: keepgrouped-bucket
-      # Atleast 64 char random key
-      GARAGE_RPC_SECRET:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:?set GARAGE_RPC_SECRET in .env}
     volumes:
-      - ./garage/garage.toml:/etc/garage.toml
-      - storage:/storage
+      - ./garage/garage.toml:/etc/garage.toml:ro
+      - storage-meta:/storage/meta
+      - storage-data:/storage/data
     networks:
       - backend-database
 
-  frontend:
-    image: forgejo.asventi.net/transcendence/frontend:latest
-    container_name: keepgrouped-frontend
-    hostname: keepgrouped-frontend
+  ai-backend:
+    image: forgejo.asventi.net/transcendance/backend-ai:latest
+    container_name: keepgrouped-ai-backend
+    hostname: ai-back-dev
+    restart: unless-stopped
     depends_on:
-      - backend
+      - chromadb
+      - llama
+    volumes:
+      - ai-cache:/app/.fastembed_cache
     networks:
-      - frontend-backend
-    environment:
-      - API_URL=http://keepgrouped-backend:8080
-    ports:
-      - 4242:443
-
-  llama:
-    hostname: "llama"
-    image: forgejo.asventi.net/transcendence/keepgrouped-llama.cpp:latest
-    networks:
-      - backend-database
-
-  backend-ia:
-    hostname: "ai-back-dev"
-    image: forgejo.asventi.net/transcendence/backend-ai:latest
-    networks:
-      - backend-database
+      - backend-ai
     environment:
       - LLAMACPP_API_BASE_URL=http://llama:9931/v1
       - LLAMACPP_API_KEY=""
-    depends_on:
-      - chromadb
 
   chromadb:
-    hostname: "chroma"
     image: chromadb/chroma:latest
+    container_name: keepgrouped-chromadb
+    hostname: chroma
+    restart: unless-stopped
     volumes:
-      - ./chroma_data:/chroma/chroma
+      - chroma-data:/chroma/chroma
+    networks:
+      - backend-ai
     environment:
       ANONYMIZED_TELEMETRY: "false"
+
+  llama:
+    image: forgejo.asventi.net/transcendence/keepgrouped-llama.cpp:latest
+    container_name: keepgrouped-llama
+    hostname: llama
+    restart: unless-stopped
     networks:
-      - backend-database
+      - backend-ai
+    devices:
+      - /dev/dri:/dev/dri
 
 networks:
-  backend-database:
-    name: keepgrouped-backend-database
   frontend-backend:
     name: keepgrouped-frontend-backend
+  backend-database:
+    name: keepgrouped-backend-database
+  backend-ai:
+    name: keepgrouped-backend-ai
 
 volumes:
   database:
-  storage:
+  storage-meta:
+  storage-data:
+  chroma-data:
+  ai-cache:

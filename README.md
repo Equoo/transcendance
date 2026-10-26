@@ -28,15 +28,15 @@ Prerequisites: Docker with Compose, a machine with atleast 4 GB of RAM or a GPU 
    docker compose up -d
    ```
 
-4. Open http://localhost:4242 and log in with the default admin account.
+4. Open <http://localhost:4242> and log in with the default admin account.
 
 The source code of each service lives in its own repository: `frontend`, `backend`, `backend-ia`, `keepgrouped-llama.cpp`.
 
 ## Team Information
 
 | Login | Role(s) | Responsibilities |
-|---|---|---|
-| pjarnac | Product Owner & Developper| Events, file storage, AI integration in the backend, infrastructure and CI |
+| --- | --- | --- |
+| pjarnac | Product Owner & Developper | Events, file storage, AI integration in the backend, infrastructure and CI |
 | dernst | Project Manager & Developper | Authentication, users, roles, invitations, admin panel |
 | dderny | Technical Lead & Developper | Chat, channels, friends and relationships |
 | tjooris | Developper | AI service (RAG pipeline, chatbot) |
@@ -50,7 +50,7 @@ The source code of each service lives in its own repository: `frontend`, `backen
 ## Technical Stack
 
 | Layer | Technologies |
-|---|---|
+| --- | --- |
 | Frontend | React 19, TypeScript, React Router, Vite, Tailwind CSS, TanStack Query, Zustand, i18next, SignalR |
 | Backend | ASP.NET Core (.NET 11), Entity Framework Core, SignalR, JWT auth |
 | AI service | Rust, Axum, Rig, FastEmbed, ChromaDB |
@@ -71,7 +71,7 @@ Justification:
 Main tables (PostgreSQL, managed by EF Core migrations in `backend/Migrations`):
 
 | Table | Key fields | Relations |
-|---|---|---|
+| --- | --- | --- |
 | Users | Id (string), UserName, Email, PasswordHash, Language (enum), IsOnline (bool) | Role (n-1), Avatar file (1-1) |
 | Roles | Id, Name, Permission (flags) | Users (1-n) |
 | Events | Id, Name, Date, Size (int), Location, Tags (string[]), Description | Organizer (n-1), Channel (1-1), Users via Registrations (n-n), EventRoles, Files |
@@ -88,7 +88,7 @@ Main tables (PostgreSQL, managed by EF Core migrations in `backend/Migrations`):
 ## Features List
 
 | Feature | Description | Member(s) |
-|---|---|---|
+| --- | --- | --- |
 | Authentication | Register, login, JWT + refresh tokens, sessions list | dernst |
 | Users and profiles | Profile, avatar, language, password change | dernst |
 | Admin panel | Manage users, roles and permissions | dernst |
@@ -104,7 +104,7 @@ Main tables (PostgreSQL, managed by EF Core migrations in `backend/Migrations`):
 ## Modules
 
 | Module | Type | Points | Implementation | Member(s) |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | Framework for frontend and backend | Major | 2 | React + ASP.NET Core | all |
 | Real-time features | Major | 2 | SignalR hub for chat and activity | dderny, pjarnac |
 | User interaction | Major | 2 | Chat, profiles, friends | dderny, dernst |
@@ -123,7 +123,7 @@ Main tables (PostgreSQL, managed by EF Core migrations in `backend/Migrations`):
 
 - **pjarnac**: events (backend and frontend), file storage with Garage, AI backend integration and RAG queue, llama.cpp image, Docker Compose, CI. Challenges: Creating a easily usable dev env with devcontainers was really hard, file management with the horrible Amazon S3 Documentation.
 - **dernst**: authentication, users, roles and permissions, invitations, admin panel. Challenges: TODO.
-- **dderny**: chat backend and UI, channels, friends and relationships. Challenges: TODO.
+- **dderny**: chat backend and UI, channels, friends and relationships. Challenges: Did you know that replicate Discord it's a huge work ? The more challenging was database structure and messages paginations.
 - **tjooris**: Rust AI service, document parsing, embeddings, chatbot. Challenges: TODO.
 
 ## Resources
