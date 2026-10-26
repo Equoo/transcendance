@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: forgejo.asventi.net/transcendance/frontend:latest
+    image: forgejo.asventi.net/transcendence/frontend:latest
     container_name: keepgrouped-frontend
     hostname: keepgrouped-frontend
     restart: unless-stopped
@@ -15,7 +15,7 @@ services:
       - ${PORT:-4242}:443
 
   backend:
-    image: forgejo.asventi.net/transcendance/backend:latest
+    image: forgejo.asventi.net/transcendence/backend:latest
     container_name: keepgrouped-backend
     hostname: keepgrouped-backend
     restart: unless-stopped
@@ -49,7 +49,7 @@ services:
     restart: unless-stopped
     shm_size: 128mb
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U keepgrouped"]
+      test: [ "CMD-SHELL", "pg_isready -U keepgrouped" ]
       interval: 2s
       timeout: 10s
       retries: 5
@@ -83,7 +83,7 @@ services:
       - backend-database
 
   ai-backend:
-    image: forgejo.asventi.net/transcendance/backend-ai:latest
+    image: forgejo.asventi.net/transcendence/backend-ai:latest
     container_name: keepgrouped-ai-backend
     hostname: ai-back-dev
     restart: unless-stopped
