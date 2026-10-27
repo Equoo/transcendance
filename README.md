@@ -124,7 +124,7 @@ Main tables (PostgreSQL, managed by EF Core migrations in `backend/Migrations`):
 - **pjarnac**: events (backend and frontend), file storage with Garage, AI backend integration and RAG queue, llama.cpp image, Docker Compose, CI. Challenges: Creating a easily usable dev env with devcontainers was really hard, file management with the horrible Amazon S3 Documentation.
 - **dernst**: authentication, users, roles and permissions, invitations, admin panel. Challenges: TODO.
 - **dderny**: chat backend and UI, channels, friends and relationships. Challenges: Did you know that replicate Discord it's a huge work ? The more challenging was database structure and messages paginations.
-- **tjooris**: Rust AI service, document parsing, embeddings, chatbot. Challenges: TODO.
+- **tjooris**: Rust AI service, document parsing, embeddings, chatbot. Challenges: Learning Rust was tough, but ingesting files using multipart was by far the most challenging part.
 
 ## Resources
 
