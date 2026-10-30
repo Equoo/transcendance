@@ -73,7 +73,7 @@ Main tables (PostgreSQL, managed by EF Core migrations in `backend/Migrations`):
 | Table | Key fields | Relations |
 | --- | --- | --- |
 | Users | Id (string), UserName, Email, PasswordHash, Language (enum), IsOnline (bool) | Role (n-1), Avatar file (1-1) |
-| Roles | Id, Name, Permission (flags) | Users (1-n) |
+| Roles | Id, Name, Ranking, Permission (flags) | Users (1-n) |
 | Events | Id, Name, Date, Size (int), Location, Tags (string[]), Description | Organizer (n-1), Channel (1-1), Users via Registrations (n-n), EventRoles, Files |
 | EventRoles | Id, Name | Events (n-n) |
 | Channels | Id, Type (enum), Name, Topic, Order | Category (n-1), Event (1-1), Members (1-n), RolesWhitelist (1-n) |
