@@ -37,7 +37,7 @@ The source code of each service lives in its own repository: `frontend`, `backen
 | Login | Role(s) | Responsibilities |
 | --- | --- | --- |
 | pjarnac | Product Owner & Developper | Events, file storage, AI integration in the backend, infrastructure and CI |
-| dernst | Project Manager & Developper | Authentication, users, roles, invitations, admin panel |
+| dernst | Project Manager & Developper | Authentication, users, roles, invitations, admin panel , multi-language|
 | dderny | Technical Lead & Developper | Chat, channels, friends and relationships |
 | tjooris | Developper | AI service (RAG pipeline, chatbot) |
 
@@ -122,7 +122,7 @@ Main tables (PostgreSQL, managed by EF Core migrations in `backend/Migrations`):
 ## Individual Contributions
 
 - **pjarnac**: events (backend and frontend), file storage with Garage, AI backend integration and RAG queue, llama.cpp image, Docker Compose, CI. Challenges: Creating a easily usable dev env with devcontainers was really hard, file management with the horrible Amazon S3 Documentation.
-- **dernst**: authentication, users, roles and permissions, invitations, admin panel. Challenges: TODO.
+- **dernst**: authentication with JWT, users, roles, multi-languages, permissions, invitations, admin panel. Challenges: Did you know that handling permissions is definitely not easy? One tiny mistake and a simple member can become an admin. Add token management on top of that, and you have the reason behind my 4 months of nightmare.
 - **dderny**: chat backend and UI, channels, friends and relationships. Challenges: Did you know that replicate Discord it's a huge work ? The more challenging was database structure and messages paginations.
 - **tjooris**: Rust AI service, document parsing, embeddings, chatbot. Challenges: Learning Rust was tough, but ingesting files using multipart was by far the most challenging part.
 
