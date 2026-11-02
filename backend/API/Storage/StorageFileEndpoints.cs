@@ -6,6 +6,7 @@ public static class StorageFileEndpoints
     {
         var group = app.MapGroup("/files").WithTags("Files");
 
+        group.MapChatUploadFile();
         group.MapUploadFile();
         group.MapDownloadFile();
         group.MapGetFileMeta();

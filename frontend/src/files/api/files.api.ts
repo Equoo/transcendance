@@ -25,8 +25,8 @@ export function toFileInput(formData: FormData): FileInput {
 	};
 }
 
-export async function createFile(data: FormData): Promise<Response> {
-	const res = await callApi("/api/files", {
+export async function createFile(data: FormData, chat: boolean = false): Promise<Response> {
+	const res = await callApi(`/api/files${chat ? "/chat" : ""}`, {
 		method: "POST",
 		body: data,
 	});
@@ -42,7 +42,7 @@ export async function uploadChatImage(
 	body.set("Name", `chat_${channelId}_${file.name}`.slice(0, 255));
 	body.set("File", file);
 
-	const res = await createFile(body);
+	const res = await createFile(body, true);
 	if (!res.ok) {
 		throw new APIError((await res.json()) as ProblemDetail);
 	}
