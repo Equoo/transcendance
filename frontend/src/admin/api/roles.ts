@@ -156,8 +156,6 @@ export async function changeRoleName(formdata: FormData): Promise<Response> {
 export async function ranking(formdata: FormData): Promise<Response> {
 	const req = toRanking(formdata);
 
-	console;
-
 	const res = await callApi(`/api/roles/${req.id}/rank/${req.direction}`, {
 		method: "POST",
 	});

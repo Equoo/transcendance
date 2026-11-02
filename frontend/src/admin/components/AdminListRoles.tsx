@@ -16,133 +16,136 @@ import { PermEnum, type Role } from "../api/roles";
 import { RolesBox } from "./AdminRoleBox";
 
 export interface Perm {
-	name: string;
-	code: number;
+    name: string;
+    code: number;
 }
 
 export default function ListRoles({
-	role,
-	count,
+    role,
+    count,
 }: {
-	role: Role;
-	count: number;
+    role: Role;
+    count: number;
 }): JSX.Element {
-	// eslint-disable-next-line id-length
-	const { t } = useTranslation();
-	const [showConfirmation, setShowConfirmation] = useState(false);
-	const [showChangeRole, setShowChangeRole] = useState(false);
-	const user = useUser();
-	const fetcher = useFetcher();
+    // eslint-disable-next-line id-length
+    const { t } = useTranslation();
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [showChangeRole, setShowChangeRole] = useState(false);
+    const user = useUser();
+    const fetcher = useFetcher();
 
-	const authorize = user!.role.ranking < role.ranking;
+    const authorize = user!.role.ranking < role.ranking && role.name !== "Member";
 
-	const checkboxes: Perm[] = [];
+    const checkboxes: Perm[] = [];
 
-	for (const [key, value] of Object.entries(PermEnum)) {
-		if (!isNaN(Number(key))) {
-			// eslint-disable-next-line no-continue
-			continue;
-		}
-		checkboxes.push({ name: key, code: value as number });
-	}
+    for (const [key, value] of Object.entries(PermEnum)) {
+        if (!isNaN(Number(key))) {
+            // eslint-disable-next-line no-continue
+            continue;
+        }
+        checkboxes.push({ name: key, code: value as number });
+    }
 
-	return (
-		<ListRow
-			className={`text-sm text-body border-b rounded-base border-border`}
-		>
-			<ListCell rowHeader className="px-6 font-medium py-5">
-				{showChangeRole && (
-					<ChangeModal
-						title={t("admin.changeRoleName")}
-						onClose={() => {
-							setShowChangeRole(false);
-						}}
-						action="/roles/changeRole"
-						method="PATCH"
-						inputName="name"
-						inputLabel={t("common.name")}
-						placeholder={t("common.name")}
-						minInput={1}
-						maxInput={20}
-						id={role.id}
-					></ChangeModal>
-				)}
-				{showConfirmation && (
-					<ChoiceModal
-						title={t("admin.deleteRoleTitle")}
-						onClose={() => {
-							setShowConfirmation(false);
-						}}
-						desc={t("admin.deleteRoleDesc")}
-						confirmLabel={t("common.delete")}
-						action="/roles/deleteRole"
-						method="DELETE"
-						id={role.id}
-					></ChoiceModal>
-				)}
-				{role.name}
-			</ListCell>
-			{checkboxes.map((check, index) => (
-				<RolesBox
-					role={role}
-					perm={check}
-					key={index}
-					authorize={authorize}
-				></RolesBox>
-			))}
-			<ListCell className="flex flex-row items-center justify-between w-full h-full px-6 py-3 ">
-				{authorize && (
-					<div className="flex gap-3 justify-center items-center">
-						<TbPencil
-							size={26}
-							className={` text-text2 hover:text-text cursor-pointer hover:animate-rotate`}
-							onClick={() => {
-								setShowChangeRole(true);
-							}}
-						/>
-						<div>
-							{role.ranking !== user!.role.ranking + 1 && (
-								<PiCaretUpBold
-									onClick={() => {
-										void fetcher.submit(
-											{ direction: "up", id: role.id },
-											{
-												method: "POST",
-												action: "/roles/ranking",
-											},
-										);
-									}}
-									className="hover:text-text hover:cursor-pointer"
-									size={20}
-								/>
-							)}
+    return (
+        <ListRow
+            className={`text-sm text-body border-b rounded-base border-border`}
+        >
+            <ListCell rowHeader className="px-6 font-medium py-5">
+                {showChangeRole && (
+                    <ChangeModal
+                        title={t("admin.changeRoleName")}
+                        onClose={() => {
+                            setShowChangeRole(false);
+                        }}
+                        action="/roles/changeRole"
+                        method="PATCH"
+                        inputName="name"
+                        inputLabel={t("common.name")}
+                        placeholder={t("common.name")}
+                        minInput={1}
+                        maxInput={20}
+                        id={role.id}
+                    ></ChangeModal>
+                )}
+                {showConfirmation && (
+                    <ChoiceModal
+                        title={t("admin.deleteRoleTitle")}
+                        onClose={() => {
+                            setShowConfirmation(false);
+                        }}
+                        desc={t("admin.deleteRoleDesc")}
+                        confirmLabel={t("common.delete")}
+                        action="/roles/deleteRole"
+                        method="DELETE"
+                        id={role.id}
+                    ></ChoiceModal>
+                )}
+                {role.name}
+            </ListCell>
+            {checkboxes.map((check, index) => (
+                <RolesBox
+                    role={role}
+                    perm={check}
+                    key={index}
+                    authorize={authorize}
+                ></RolesBox>
+            ))}
+            <ListCell className="flex flex-row items-center justify-between w-full h-full px-6 py-3 ">
+                {authorize && (
+                    <div className="flex gap-3 justify-center items-center">
+                        <TbPencil
+                            size={26}
+                            className={` text-text2 hover:text-text cursor-pointer hover:animate-rotate`}
+                            onClick={() => {
+                                setShowChangeRole(true);
+                            }}
+                        />
+                        {count > 1 && (
 
-							{role.ranking !== count && (
-								<PiCaretDownBold
-									onClick={() => {
-										void fetcher.submit(
-											{ direction: "down", id: role.id },
-											{
-												method: "POST",
-												action: "/roles/ranking",
-											},
-										);
-									}}
-									size={20}
-									className="hover:text-text hover:cursor-pointer"
-								/>
-							)}
-						</div>
-						<TbTrash
-							size={26}
-							className="hover:cursor-pointer text-text2 hover:text-text"
-							onClick={() => {
-								setShowConfirmation(true);
-							}}
-						/>
-					</div>
-				)}
-			</ListCell>
-		</ListRow>
-	);
+                            <div>
+                                {role.ranking !== user!.role.ranking + 1 && (
+                                    <PiCaretUpBold
+                                        onClick={() => {
+                                            void fetcher.submit(
+                                                { direction: "up", id: role.id },
+                                                {
+                                                    method: "POST",
+                                                    action: "/roles/ranking",
+                                                },
+                                            );
+                                        }}
+                                        className="hover:text-text hover:cursor-pointer"
+                                        size={20}
+                                    />
+                                )}
+
+                                {role.ranking !== count && (
+                                    <PiCaretDownBold
+                                        onClick={() => {
+                                            void fetcher.submit(
+                                                { direction: "down", id: role.id },
+                                                {
+                                                    method: "POST",
+                                                    action: "/roles/ranking",
+                                                },
+                                            );
+                                        }}
+                                        size={20}
+                                        className="hover:text-text hover:cursor-pointer"
+                                    />
+                                )}
+                            </div>
+                        )}
+                        <TbTrash
+                            size={26}
+                            className="hover:cursor-pointer text-text2 hover:text-text"
+                            onClick={() => {
+                                setShowConfirmation(true);
+                            }}
+                        />
+                    </div>
+                )}
+            </ListCell>
+        </ListRow>
+    );
 }

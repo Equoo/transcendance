@@ -23,7 +23,7 @@ public sealed class DeleteRoleQuery(KeepGroupedDb db, TokenContext tk) : IHandle
             return RoleProblems.RankingTooLow();
         }
 
-        if (db_role.Name == Role.SuperRole)
+        if (db_role.Name == Role.SuperRole || db_role.Name == Role.DefaultRole)
         {
             return RoleProblems.NotAllowed();
         }
