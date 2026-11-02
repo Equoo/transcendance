@@ -1,4 +1,4 @@
-import { getConnection } from "@/realtime";
+import { hubInvoke } from "@/realtime";
 
 import type { Message } from "../api/chat.api";
 
@@ -7,8 +7,7 @@ export async function sendMessage(
 	content: string,
 	messageReference: string | undefined,
 ): Promise<Message> {
-	const connection = getConnection();
-	return connection.invoke("CreateMessage", channelId, {
+	return hubInvoke("CreateMessage", channelId, {
 		content,
 		messageReference,
 	});
@@ -19,8 +18,7 @@ export async function updateMessage(
 	id: string,
 	content: string,
 ): Promise<void> {
-	const connection = getConnection();
-	return connection.invoke("UpdateMessage", channelId, id, {
+	return hubInvoke("UpdateMessage", channelId, id, {
 		content,
 	});
 }
@@ -29,6 +27,5 @@ export async function deleteMessage(
 	channelId: string,
 	id: string,
 ): Promise<void> {
-	const connection = getConnection();
-	return connection.invoke("DeleteMessage", channelId, id);
+	return hubInvoke("DeleteMessage", channelId, id);
 }
