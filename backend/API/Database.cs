@@ -187,7 +187,7 @@ public static class DbBuilder
 			user.PasswordHash = new KeepGroupedPasswordHasher().HashPassword(user, authOptions.DefaultAdminPwd);
 			db.Set<User>().Add(user);
 			db.Set<EventRole>().Add(new EventRole() { Name = EventRole.Implicit });
-			db.Set<Role>().Add(new Role(Role.DefaultRole, 4));
+			db.Set<Role>().Add(new Role(Role.DefaultRole, 1));
 
 			db.SaveChanges();
 
@@ -199,9 +199,9 @@ public static class DbBuilder
 			db.Set<EventRole>().Add(new EventRole() { Name = "DPS" });
 			db.Set<EventRole>().Add(new EventRole() { Name = "Heal" });
 			db.Set<EventRole>().Add(new EventRole() { Name = "Tank" });
-			User user1 = new() { UserName = "devan", Email = "devan@keepgrouped.dev", Role = new("Modo", Perms.HandleEvent, 2), ExpireAt = DateTime.Now.AddYears(1).ToUniversalTime() };
-			User user2 = new() { UserName = "pierre", Email = "pierre@keepgrouped.dev", Role = new("Helper", Perms.HandleEvent, 3), ExpireAt = DateTime.Now.AddYears(1).ToUniversalTime() };
-			User user3 = new() { UserName = "tom", Email = "tom@keepgrouped.dev", Role = new("Gold", (Perms)int.MaxValue, 1), ExpireAt = DateTime.Now.AddYears(1).ToUniversalTime() };
+			User user1 = new() { UserName = "devan", Email = "devan@keepgrouped.dev", Role = new("Modo", Perms.HandleEvent, 3), ExpireAt = DateTime.Now.AddYears(1).ToUniversalTime() };
+			User user2 = new() { UserName = "pierre", Email = "pierre@keepgrouped.dev", Role = new("Helper", Perms.HandleEvent, 4), ExpireAt = DateTime.Now.AddYears(1).ToUniversalTime() };
+			User user3 = new() { UserName = "tom", Email = "tom@keepgrouped.dev", Role = new("Gold", (Perms)int.MaxValue, 2), ExpireAt = DateTime.Now.AddYears(1).ToUniversalTime() };
 			User user4 = new() { UserName = "david", Email = "david@keepgrouped.dev", Role = db.Set<Role>().Single((role) => role.Name == "Member"), ExpireAt = DateTime.Now.AddYears(1).ToUniversalTime() };
 
 			user1.PasswordHash = new KeepGroupedPasswordHasher().HashPassword(user1, "a");
