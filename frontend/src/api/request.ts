@@ -16,6 +16,9 @@ export async function request(
 
 	const response = await callApi(url, init);
 	if (!response.ok) {
+		if (response.status === 500) {
+			throw new Error(await response.json());
+		}
 		throw new APIError((await response.json()) as ProblemDetail);
 	}
 
