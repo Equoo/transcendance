@@ -12,7 +12,7 @@ export async function responseError(response: Response): Promise<Error> {
 			problem = JSON.parse(text) as Partial<ProblemDetail>;
 		}
 	} catch {
-
+		// empty catch
 	}
 
 	if (response.status >= 500 || problem === null || typeof problem !== "object") {
