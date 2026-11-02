@@ -1,4 +1,5 @@
 using KeepGrouped.API.Attributes.Roles;
+using KeepGrouped.API.Problems;
 using Microsoft.AspNetCore.Http.Features;
 
 namespace KeepGrouped.API.Middlewares;
@@ -20,7 +21,7 @@ public class RolesMiddleware
 		{
 			if (!tk.User.Role.Permission.HasFlag(attribute.Permission))
 			{
-				context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+				await UserProblems.MissingPermission().ExecuteAsync(context);
 				return;
 			}
 		}

@@ -826,6 +826,22 @@ export default {
 						title: "Password cannot be changed",
 						detail: "This user's password cannot be changed.",
 					},
+					INVALID_DIRECTION: {
+						title: "Invalid direction",
+						detail: "A role can only be moved up or down.",
+					},
+					MISSING_PERMISSION: {
+						title: "Missing permission",
+						detail: "Your role doesn't have the permission required for this action.",
+					},
+					PROTECTED_ROLE: {
+						title: "Protected role",
+						detail: "This role cannot be renamed.",
+					},
+					RANK_OUT_OF_BOUNDS: {
+						title: "Cannot move role",
+						detail: "This role is already at the edge of the hierarchy.",
+					},
 					RANKING_TOO_LOW: {
 						title: "Role too low",
 						detail: "Your role is too low in the hierarchy to do this.",

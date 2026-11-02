@@ -32,11 +32,12 @@ export default function RoleTable({ role }: { role: Role[] }): JSX.Element {
 			empty={role.length === 0}
 			emptyMessage={t("admin.noRole")}
 		>
-			{role.map((rls) => (
+			{role.map((rls, index) => (
 				<ListRoles
 					key={rls.id}
 					role={rls}
-					count={role.length}
+					above={role[index - 1]}
+					isLast={index === role.length - 1}
 				></ListRoles>
 			))}
 		</List>

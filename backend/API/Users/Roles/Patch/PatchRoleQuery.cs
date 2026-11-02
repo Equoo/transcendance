@@ -33,7 +33,7 @@ public sealed class PatchRoleQuery(KeepGroupedDb db, TokenContext tk) : IHandler
             return RoleProblems.NotFound(IdRole);
         }
 
-        if (tk.User.Role.Ranking >= role.Ranking)
+        if (tk.User.Role.Ranking >= role.Ranking || tk.User.Role.Ranking >= user.Role.Ranking)
         {
             return UserProblems.NotAuthorized();
         }

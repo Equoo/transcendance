@@ -3,6 +3,34 @@ import callApi from "@/tokens/callApi";
 
 type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
+export async function responseError(response: Response): Promise<Error> {
+	const text = await response.text().catch(() => "");
+	let problem: Partial<ProblemDetail> | null = null;
+
+	try {
+		if (text) {
+			problem = JSON.parse(text) as Partial<ProblemDetail>;
+		}
+	} catch {
+
+	}
+
+	if (response.status >= 500 || problem === null || typeof problem !== "object") {
+		return new Error(
+			problem?.detail ?? problem?.title ?? response.statusText,
+		);
+	}
+
+	return new APIError({
+		type: "",
+		title: response.statusText,
+		traceId: "",
+		errorCode: "",
+		...problem,
+		status: response.status,
+	});
+}
+
 export async function request(
 	url: string,
 	method: HttpMethod = "GET",
@@ -16,10 +44,7 @@ export async function request(
 
 	const response = await callApi(url, init);
 	if (!response.ok) {
-		if (response.status === 500) {
-			throw new Error(await response.json());
-		}
-		throw new APIError((await response.json()) as ProblemDetail);
+		throw await responseError(response);
 	}
 
 	return response;

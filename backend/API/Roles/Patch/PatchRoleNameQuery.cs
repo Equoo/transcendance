@@ -17,6 +17,11 @@ public sealed class PatchRoleNameQuery(KeepGroupedDb db, TokenContext tk) : IHan
             return RoleProblems.NotFound(id);
         }
 
+        if (db_role.Name == Role.SuperRole || db_role.Name == Role.DefaultRole)
+        {
+            return RoleProblems.ProtectedRole();
+        }
+
         Role? check_name = await db.Roles.FirstOrDefaultAsync(r => r.Id != id && r.Name.ToLower() == name.ToLower());
 
         if (check_name is not null)

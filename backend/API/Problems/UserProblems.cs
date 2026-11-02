@@ -31,6 +31,11 @@ static public class UserProblems
         "Email already used",
         $"'{email}' is already used by an other user.");
 
+    static public ProblemHttpResult MissingPermission() => ProblemFactory.Create(
+        StatusCodes.Status403Forbidden, "MISSING_PERMISSION",
+        "Missing permission",
+        "Your role does not have the permission required for this action.");
+
     static public ProblemHttpResult NotAuthenticated() => ProblemFactory.Create(
         StatusCodes.Status401Unauthorized, "NOT_AUTHENTICATED",
         "Not authenticated",

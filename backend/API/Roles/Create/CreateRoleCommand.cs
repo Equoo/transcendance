@@ -10,8 +10,6 @@ public sealed class CreateRoleCommand(KeepGroupedDb db) : IHandler
     public async Task<Result> ExecAsync(string name)
     {
 
-        int count_role = await db.Roles.CountAsync(r => r.Name != Role.SuperRole);
-
         Role? role_db = await db.Roles.FirstOrDefaultAsync(r => r.Name.ToLower() == name.ToLower());
 
         if (role_db is not null)
@@ -19,7 +17,9 @@ public sealed class CreateRoleCommand(KeepGroupedDb db) : IHandler
             return RoleProblems.NameAlreadyUsed(name);
         }
 
-        Role role = new(name, count_role + 1);
+        int last_rank = await db.Roles.MaxAsync(r => (int?)r.Ranking) ?? 0;
+
+        Role role = new(name, last_rank + 1);
 
         db.Roles.Add(role);
 

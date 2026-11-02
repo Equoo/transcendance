@@ -1,4 +1,3 @@
-using System.Net;
 using KeepGrouped.API;
 using KeepGrouped.API.Middlewares;
 using KeepGrouped.API.Problems;
@@ -9,37 +8,49 @@ public sealed class RankingControlCommand(KeepGroupedDb db, TokenContext tk) : I
 {
     public async Task<Result> ExecAsync(string id, string direction)
     {
-        List<String> diff = ["up", "down"];
-
-
-
-        if (!diff.Contains(direction))
+        if (direction != "up" && direction != "down")
         {
-            return RoleProblems.OpNotFound(direction);
+            return RoleProblems.InvalidDirection(direction);
         }
 
-        var op = direction == "up" ? -1 : +1;
+        List<Role> roles = await db.Roles
+            .Where(r => r.Name != Role.SuperRole)
+            .OrderBy(r => r.Ranking)
+            .ThenBy(r => r.Name)
+            .ToListAsync();
 
-        Role? db_role = await db.Roles.SingleOrDefaultAsync(r => r.Id == id);
+        int index = roles.FindIndex(r => r.Id == id);
 
-        if (db_role is null)
+        if (index == -1)
         {
-            return RoleProblems.NotFound();
+            return RoleProblems.NotFound(id);
         }
 
-        if (tk.User.Role.Ranking >= db_role.Ranking) return RoleProblems.RankingTooLow();
+        int actor = roles.FindIndex(r => r.Id == tk.User.Role.Id);
 
-        Role? db_seconde = await db.Roles.SingleOrDefaultAsync(r => r.Ranking == db_role.Ranking + op);
-
-        if (db_seconde is null)
+        if (index <= actor)
         {
-            return RoleProblems.NotFound();
+            return RoleProblems.RankingTooLow();
         }
 
-        if (db_role.Ranking + op <= tk.User.Role.Ranking) return RoleProblems.RankingTooLow();
+        int target = direction == "up" ? index - 1 : index + 1;
 
-        db_seconde.Ranking -= op;
-        db_role.Ranking += op;
+        if (target < 0 || target >= roles.Count)
+        {
+            return RoleProblems.RankOutOfBounds();
+        }
+
+        if (target <= actor)
+        {
+            return RoleProblems.RankingTooLow();
+        }
+
+        (roles[index], roles[target]) = (roles[target], roles[index]);
+
+        for (int i = 0; i < roles.Count; i++)
+        {
+            roles[i].Ranking = i + 1;
+        }
 
         await db.SaveChangesAsync();
 

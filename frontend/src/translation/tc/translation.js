@@ -817,6 +817,22 @@ export default {
 						title: "無法變更密碼",
 						detail: "無法變更此使用者的密碼。",
 					},
+					INVALID_DIRECTION: {
+						title: "方向無效",
+						detail: "角色只能向上或向下移動。",
+					},
+					MISSING_PERMISSION: {
+						title: "缺少權限",
+						detail: "您的角色沒有執行此操作所需的權限。",
+					},
+					PROTECTED_ROLE: {
+						title: "受保護的角色",
+						detail: "此角色無法重新命名。",
+					},
+					RANK_OUT_OF_BOUNDS: {
+						title: "無法移動角色",
+						detail: "此角色已位於層級的最邊緣。",
+					},
 					RANKING_TOO_LOW: {
 						title: "角色等級不足",
 						detail: "您的角色等級太低，無法執行此操作。",

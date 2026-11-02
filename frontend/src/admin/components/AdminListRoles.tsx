@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @eslint-react/no-array-index-key */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { JSX } from "react/jsx-runtime";
 import { useTranslation } from "react-i18next";
 import { PiCaretDownBold, PiCaretUpBold } from "react-icons/pi";
@@ -11,6 +11,7 @@ import { ListCell, ListRow } from "@/components/List/List";
 import ChangeModal from "@/components/Modal/ChangeModal";
 import ChoiceModal from "@/components/Modal/ChoiceModal";
 import { useUser } from "@/users/hooks/users";
+import { toastError } from "@/utils/error.util";
 
 import { PermEnum, type Role } from "../api/roles";
 import { RolesBox } from "./AdminRoleBox";
@@ -22,10 +23,12 @@ export interface Perm {
 
 export default function ListRoles({
     role,
-    count,
+    above,
+    isLast,
 }: {
     role: Role;
-    count: number;
+    above?: Role;
+    isLast: boolean;
 }): JSX.Element {
     // eslint-disable-next-line id-length
     const { t } = useTranslation();
@@ -35,6 +38,26 @@ export default function ListRoles({
     const fetcher = useFetcher();
 
     const authorize = user!.role.ranking < role.ranking && role.name !== "Member";
+    const pending = fetcher.state !== "idle";
+
+    const canMoveUp = Boolean(above && above.ranking > user!.role.ranking);
+    const canMoveDown = !isLast;
+
+    useEffect(() => {
+        if (fetcher.state === "idle" && fetcher.data instanceof Error) {
+            toastError(fetcher.data);
+        }
+    }, [fetcher.state, fetcher.data]);
+
+    const move = (direction: "up" | "down"): void => {
+        if (pending) {
+            return;
+        }
+        void fetcher.submit(
+            { direction, id: role.id },
+            { method: "POST", action: "/roles/ranking" },
+        );
+    };
 
     const checkboxes: Perm[] = [];
 
@@ -100,38 +123,25 @@ export default function ListRoles({
                                 setShowChangeRole(true);
                             }}
                         />
-                        {count > 1 && (
-
+                        {(canMoveUp || canMoveDown) && (
                             <div>
-                                {role.ranking !== user!.role.ranking + 1 && (
+                                {canMoveUp && (
                                     <PiCaretUpBold
                                         onClick={() => {
-                                            void fetcher.submit(
-                                                { direction: "up", id: role.id },
-                                                {
-                                                    method: "POST",
-                                                    action: "/roles/ranking",
-                                                },
-                                            );
+                                            move("up");
                                         }}
-                                        className="hover:text-text hover:cursor-pointer"
+                                        className={pending ? "opacity-50" : "hover:text-text hover:cursor-pointer"}
                                         size={20}
                                     />
                                 )}
 
-                                {role.ranking !== count && (
+                                {canMoveDown && (
                                     <PiCaretDownBold
                                         onClick={() => {
-                                            void fetcher.submit(
-                                                { direction: "down", id: role.id },
-                                                {
-                                                    method: "POST",
-                                                    action: "/roles/ranking",
-                                                },
-                                            );
+                                            move("down");
                                         }}
                                         size={20}
-                                        className="hover:text-text hover:cursor-pointer"
+                                        className={pending ? "opacity-50" : "hover:text-text hover:cursor-pointer"}
                                     />
                                 )}
                             </div>

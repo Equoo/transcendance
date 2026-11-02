@@ -17,24 +17,31 @@ export async function clientAction({
 	const formdata = await request.formData();
 	let res;
 
-	if (params.action === "createRole") {
-		res = await createRole(formdata);
-	}
+	try {
+		if (params.action === "createRole") {
+			res = await createRole(formdata);
+		}
 
-	if (params.action === "changeRole") {
-		res = await changeRoleName(formdata);
-	}
+		if (params.action === "changeRole") {
+			res = await changeRoleName(formdata);
+		}
 
-	if (params.action === "deleteRole") {
-		res = await deleteRole(formdata);
-	}
+		if (params.action === "deleteRole") {
+			res = await deleteRole(formdata);
+		}
 
-	if (params.action === "checkRole") {
-		res = await handleCheckbox(formdata);
-	}
+		if (params.action === "checkRole") {
+			res = await handleCheckbox(formdata);
+		}
 
-	if (params.action === "ranking") {
-		res = await ranking(formdata);
+		if (params.action === "ranking") {
+			res = await ranking(formdata);
+		}
+	} catch (err) {
+		if (err instanceof Error) {
+			return data(err);
+		}
+		throw err;
 	}
 
 	return data({

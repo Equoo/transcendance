@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { type JSX, useEffect, useState } from "react";
+import { type JSX, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
 
 import { useUser } from "@/users/hooks/users";
+import { toastError } from "@/utils/error.util";
 
 import type { Role } from "../api/roles";
 import type { clientAction } from "../routes/RolesAction";
@@ -23,17 +24,28 @@ export function RolesBox({
 	const { t } = useTranslation();
 	const fetcher = useFetcher<typeof clientAction>();
 	const [anim, setAnim] = useState(false);
-	const [check, setCheck] = useState<boolean>(
-		Boolean(role.permission & perm.code),
-	);
+	const check = fetcher.formData
+		? fetcher.formData.get("IsChecked") === "true"
+		: Boolean(role.permission & perm.code);
 
 	const user = useUser();
 
 	// eslint-disable-next-line no-param-reassign
 	authorize &&= Boolean(user!.role.permission & perm.code);
 
+	const handledDataRef = useRef(fetcher.data);
+
 	useEffect(() => {
-		if (fetcher.data && fetcher.state === "idle") {
+		if (fetcher.state !== "idle" || fetcher.data === handledDataRef.current) {
+			return;
+		}
+		handledDataRef.current = fetcher.data;
+
+		if (fetcher.data instanceof Error) {
+			toastError(fetcher.data);
+			return;
+		}
+		if (fetcher.data) {
 			toast.success(
 				t(
 					fetcher.data.status === 201
@@ -58,12 +70,10 @@ export function RolesBox({
 					perm: t(`permissions.${perm.name}`),
 					role: role.name,
 				})}
-				defaultChecked={Boolean(perm.code & role.permission)}
-
+				checked={check}
 				className={`checkbox text-accent rounded-sm w-6 h-6 text-2xl ${anim ? "animate-checked" : ""} ${authorize ? "cursor-pointer" : ""} ${check && authorize ? "hover:brightness-110" : "brightness-100"}`}
-				onClick={(box) => {
+				onChange={(box) => {
 					const isChecked = box.currentTarget.checked;
-					setCheck(isChecked);
 					setAnim(isChecked);
 					void fetcher.submit(
 						{

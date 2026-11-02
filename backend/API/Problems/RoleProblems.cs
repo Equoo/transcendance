@@ -33,9 +33,19 @@ static public class RoleProblems
   StatusCodes.Status403Forbidden, "RANKING_TOO_LOW",
   "Ranking too low", "Your actual role ranking is too low to doing this action");
 
-    static public ProblemHttpResult OpNotFound(string op) => ProblemFactory.Create(
-           StatusCodes.Status404NotFound, "ROLE_NOT_FOUND",
-           "Op not found",
-           $"Op not found {op}.");
+    static public ProblemHttpResult InvalidDirection(string direction) => ProblemFactory.Create(
+        StatusCodes.Status400BadRequest, "INVALID_DIRECTION",
+        "Invalid direction",
+        $"'{direction}' is not a valid direction, expected 'up' or 'down'.");
+
+    static public ProblemHttpResult RankOutOfBounds() => ProblemFactory.Create(
+        StatusCodes.Status409Conflict, "RANK_OUT_OF_BOUNDS",
+        "Cannot move role",
+        "The role is already at the edge of the hierarchy.");
+
+    static public ProblemHttpResult ProtectedRole() => ProblemFactory.Create(
+        StatusCodes.Status403Forbidden, "PROTECTED_ROLE",
+        "Protected role",
+        "This role cannot be renamed.");
 
 }

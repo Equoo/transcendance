@@ -843,6 +843,22 @@ export default {
 						title: "Mot de passe non modifiable",
 						detail: "Le mot de passe de cet utilisateur ne peut pas être modifié.",
 					},
+					INVALID_DIRECTION: {
+						title: "Direction invalide",
+						detail: "Un rôle ne peut être déplacé que vers le haut ou le bas.",
+					},
+					MISSING_PERMISSION: {
+						title: "Permission manquante",
+						detail: "Votre rôle n'a pas la permission requise pour cette action.",
+					},
+					PROTECTED_ROLE: {
+						title: "Rôle protégé",
+						detail: "Ce rôle ne peut pas être renommé.",
+					},
+					RANK_OUT_OF_BOUNDS: {
+						title: "Déplacement impossible",
+						detail: "Ce rôle est déjà à l'extrémité de la hiérarchie.",
+					},
 					RANKING_TOO_LOW: {
 						title: "Rôle insuffisant",
 						detail: "Votre rôle est trop bas dans la hiérarchie pour faire cela.",

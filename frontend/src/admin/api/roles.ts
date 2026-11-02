@@ -1,5 +1,4 @@
-import { APIError, type ProblemDetail } from "@/api/problem_detail";
-import { requestJson } from "@/api/request";
+import { requestJson, responseError } from "@/api/request";
 import callApi from "@/tokens/callApi";
 
 import { toUserId } from "./users";
@@ -112,7 +111,7 @@ export async function createRole(formdata: FormData): Promise<Response> {
 	});
 
 	if (!res.ok) {
-		throw new APIError((await res.json()) as ProblemDetail);
+		throw await responseError(res);
 	}
 
 	return res;
@@ -129,7 +128,7 @@ export async function deleteRole(formdata: FormData): Promise<Response> {
 	});
 
 	if (!res.ok) {
-		throw new APIError((await res.json()) as ProblemDetail);
+		throw await responseError(res);
 	}
 
 	return res;
@@ -147,7 +146,7 @@ export async function changeRoleName(formdata: FormData): Promise<Response> {
 	});
 
 	if (!res.ok) {
-		throw new APIError((await res.json()) as ProblemDetail);
+		throw await responseError(res);
 	}
 
 	return res;
@@ -161,7 +160,7 @@ export async function ranking(formdata: FormData): Promise<Response> {
 	});
 
 	if (!res.ok) {
-		throw new APIError((await res.json()) as ProblemDetail);
+		throw await responseError(res);
 	}
 
 	return res;
@@ -187,7 +186,7 @@ export async function handleCheckbox(formdata: FormData): Promise<Response> {
 	});
 
 	if (!res.ok) {
-		throw new APIError((await res.json()) as ProblemDetail);
+		throw await responseError(res);
 	}
 
 	return res;
