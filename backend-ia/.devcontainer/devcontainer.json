@@ -1,0 +1,21 @@
+{
+  "name": "Rust",
+  "remoteUser": "root",
+  "updateRemoteUserUID": true,
+  "dockerComposeFile": "compose.yaml",
+  "service": "keepgrouped-back-ai",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "serayuzgur.crates",
+        "1YiB.rust-bundle"
+      ]
+    }
+  },
+  "postCreateCommand": "apt-get update && apt-get install -y protobuf-compiler libprotobuf-dev",
+  "initializeCommand": "docker network create -d bridge keepgrouped-net || true"
+}

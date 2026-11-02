@@ -1,0 +1,36 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+
+namespace KeepGrouped.API.Problems;
+
+static public class ChannelProblems
+{
+	static public ProblemHttpResult NotFound(string id) => ProblemFactory.Create(
+		StatusCodes.Status404NotFound, "CHANNEL_NOT_FOUND",
+		"Channel not found",
+		$"No channel has the id '{id}'.");
+
+	static public ProblemHttpResult NameAlreadyUsed(string name) => ProblemFactory.Create(
+		StatusCodes.Status409Conflict, "CHANNEL_NAME_ALREADY_USED",
+		"Channel name already used",
+		$"'{name}' is already used by another channel.");
+
+	static public ProblemHttpResult NameInvalid() => ProblemFactory.Create(
+		StatusCodes.Status422UnprocessableEntity, "CHANNEL_NAME_INVALID",
+		"Invalid channel name",
+		"Channel name must not be empty and cannot contain whitespace or special characters.");
+
+	static public ProblemHttpResult EventChannel(string eventId) => ProblemFactory.Create(
+		StatusCodes.Status409Conflict, "CHANNEL_EVENT_OWNED",
+		"Channel owned by an event",
+		$"This channel belongs to the event '{eventId}', delete the event instead.");
+
+	static public ProblemHttpResult OrderMismatch() => ProblemFactory.Create(
+		StatusCodes.Status422UnprocessableEntity, "CHANNEL_ORDER_MISMATCH",
+		"Invalid channel order",
+		"The list must contain each text channel of the category exactly once, and only text channels.");
+
+	static public ProblemHttpResult RoleNotFound() => ProblemFactory.Create(
+		StatusCodes.Status422UnprocessableEntity, "CHANNEL_ROLE_NOT_FOUND",
+		"Inexistant channel role",
+		"One or more channel whitelisted roles do not exist.");
+}

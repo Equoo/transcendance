@@ -1,0 +1,29 @@
+[package]
+name = "backend-ia"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.103"
+axum = { version = "0.8.9", features = ["multipart"] }
+base64 = "0.23.1"
+calamine = "0.36.1"
+chroma = "0.15.0"
+docx-lite = "0.2.0"
+dotenv = "0.15.0"
+dotext = "0.1.1"
+futures = "0.3.34"
+pdf-extract = "0.12.0"
+rig = "0.43.0"
+rig-fastembed = "0.43.0"
+schemars = "1.2.1"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
+stream = "0.1.0"
+tokio = { version = "1.52.3", features = ["full"] }
+tokio-stream = "0.1.19"
+tower-http = { version = "0.7.0", features = ["cors"] }
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+url = "2.5.8"
+uuid = { version = "1.26.0", features = ["v4"] }

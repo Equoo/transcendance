@@ -1,0 +1,61 @@
+using KeepGrouped.API.Problems;
+using KeepGrouped.API.Rag;
+using KeepGrouped.API.Users;
+using Microsoft.EntityFrameworkCore;
+
+namespace KeepGrouped.API.Events;
+
+public sealed class CreateRegistrationCommand(KeepGroupedDb db, RagQueue rag) : IHandler
+{
+    public async Task<Result> ExecuteAsync(string eventId, User? user, CreateRegistrationRequest req)
+    {
+        if (user is null)
+        {
+            return UserProblems.NotAuthenticated();
+        }
+        await using var tx = await db.Database.BeginTransactionAsync();
+        await db.Database.ExecuteSqlAsync($"SELECT 1 FROM \"Events\" WHERE \"Id\" = {eventId} FOR UPDATE");
+        Event? ev = await db.Events
+            .Include(e => e.EventRoles)
+            .Include(e => e.Registrations).ThenInclude(r => r.User)
+            .SingleOrDefaultAsync(e => e.Id == eventId);
+        if (ev is null)
+        {
+            return EventProblems.NotFound(eventId);
+        }
+
+        EventRole? eventRole = await db.EventRoles.SingleOrDefaultAsync(er => er.Id == req.EventRoleId);
+        if (eventRole is null)
+        {
+            return EventRoleProblems.NotFound(req.EventRoleId);
+        }
+
+        if (!ev.EventRoles.Any(er => er.Id == eventRole.Id))
+        {
+            return EventRoleProblems.NotOfferedByEvent(eventRole.Name, ev.Name);
+        }
+
+        if (ev.Registrations.Any(r => r.User.Id == user.Id))
+        {
+            return RegistrationProblems.AlreadyRegistered(user.UserName, ev.Name);
+        }
+
+        if (ev.Registrations.Count >= ev.Size && ev.Size != -1)
+        {
+            return EventProblems.Full(ev.Name, ev.Size);
+        }
+
+        var registration = new Registration()
+        {
+            User = user,
+            Role = eventRole
+        };
+
+        ev.Registrations.Add(registration);
+
+        await db.SaveChangesAsync();
+        await tx.CommitAsync();
+        rag.Upsert(ev);
+        return Result.OK;
+    }
+}

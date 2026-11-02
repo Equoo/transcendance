@@ -1,0 +1,46 @@
+services:
+  keepgrouped-back-ai:
+    hostname: "ai-back-dev"
+    build:
+      dockerfile: Dockerfile
+    tty: true
+    environment:
+      - LLAMACPP_API_BASE_URL=http://llama:9931/v1
+      - LLAMACPP_API_KEY=""
+    ports:
+      - "7070:7070"
+    volumes:
+      - ../../:/workspaces:cached
+    depends_on:
+      - chromadb
+    networks:
+      - keepgrouped-net
+
+  chromadb:
+    hostname: "chroma"
+    image: chromadb/chroma:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      ANONYMIZED_TELEMETRY: "false"
+    networks:
+      - keepgrouped-net
+
+  llama:
+    hostname: "llama"
+    image: forgejo.asventi.net/transcendence/keepgrouped-llama.cpp:latest
+    ports:
+      - "9931:9931"
+    networks:
+      - keepgrouped-net
+    devices:
+      - /dev/dri:/dev/dri
+
+networks:
+  keepgrouped-net:
+    external: true
+
+volumes:
+  chroma_data:

@@ -1,0 +1,60 @@
+using System.Security.Cryptography;
+using KeepGrouped.API.Password;
+using KeepGrouped.API.Problems;
+using Microsoft.EntityFrameworkCore;
+
+namespace KeepGrouped.API.Users;
+
+/// <summary>Handler-to-endpoint carrier: the endpoint alone turns the tokens into cookies.</summary>
+public sealed record RefreshedSession(RefreshResponse User, IssuedTokens Tokens);
+
+public sealed class RefreshTokensCommand(KeepGroupedDb db, TokenProvider provider) : IHandler
+{
+    public async Task<Result<RefreshedSession>> ExecuteAsync(string? cookieRefresh)
+    {
+        if (cookieRefresh is null)
+        {
+            return AuthProblems.RefreshTokenMissing();
+        }
+
+        string refresh_id = Hash256.GetHashSha256(provider.ReadFirstClaim(cookieRefresh));
+        RefreshToken? refresh_db = await db.RefreshTokens.SingleOrDefaultAsync(o => o.Id == refresh_id);
+        if (refresh_db is null)
+        {
+            return AuthProblems.RefreshTokenUnknown();
+        }
+
+        if (!provider.IsValid(cookieRefresh))
+        {
+            db.RefreshTokens.Remove(refresh_db);
+            await db.SaveChangesAsync();
+            return AuthProblems.RefreshTokenInvalid();
+        }
+
+
+        User? user = await db.Users.SingleOrDefaultAsync(u => u.Id == refresh_db.UserId);
+        if (user is null)
+        {
+            return AuthProblems.RefreshTokenUnknown();
+        }
+
+        string new_acess = provider.CreateAccess(refresh_db.UserId);
+
+        string id = Convert.ToBase64String(RandomNumberGenerator.GetBytes(256));
+        string new_refresh = provider.CreateRefresh(id);
+
+        db.RefreshTokens.Remove(refresh_db);
+        db.RefreshTokens.Add(new RefreshToken
+        {
+            Id = Hash256.GetHashSha256(id),
+            UserId = refresh_db.UserId,
+            ExpireAt = DateTime.UtcNow.AddDays(7)
+        });
+
+        user.ExpireAt = DateTime.Now.AddYears(1).ToUniversalTime();
+
+        await db.SaveChangesAsync();
+
+        return new RefreshedSession(RefreshResponse.FromEntity(user), new IssuedTokens(new_acess, new_refresh));
+    }
+}

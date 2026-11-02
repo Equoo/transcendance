@@ -1,0 +1,43 @@
+using System.Security.Cryptography;
+using KeepGrouped.API.Password;
+using KeepGrouped.API.Problems;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+namespace KeepGrouped.API.Users;
+
+public sealed record AuthenticatedUser(LoginResponse User, IssuedTokens Tokens);
+
+public sealed class LoginUserCommand(KeepGroupedDb db, KeepGroupedPasswordHasher pass, TokenProvider provider) : IHandler
+{
+    public async Task<Result<AuthenticatedUser>> ExecuteAsync(LoginRequest req)
+    {
+        var email = User.NormalizeEmail(req.Login);
+        User? user_db = await db.Users.SingleOrDefaultAsync(u => u.UserName == req.Login || u.Email == email);
+
+        if (user_db is null)
+        {
+            return AuthProblems.InvalidCredentials();
+        }
+
+        if (pass.VerifyHashedPassword(user_db, user_db.PasswordHash, req.Password) == PasswordVerificationResult.Failed)
+        {
+            return AuthProblems.InvalidCredentials();
+        }
+
+        string acess_token = provider.CreateAccess(user_db.Id);
+
+        string id = Convert.ToBase64String(RandomNumberGenerator.GetBytes(256));
+        string refresh_token = provider.CreateRefresh(id);
+
+        db.RefreshTokens.Add(new RefreshToken
+        {
+            Id = Hash256.GetHashSha256(id),
+            UserId = user_db.Id,
+            ExpireAt = DateTime.UtcNow.AddDays(7)
+        });
+
+        await db.SaveChangesAsync();
+        return new AuthenticatedUser(LoginResponse.FromEntity(user_db), new IssuedTokens(acess_token, refresh_token));
+    }
+}

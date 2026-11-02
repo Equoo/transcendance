@@ -1,0 +1,74 @@
+using KeepGrouped.API.Users;
+using Microsoft.AspNetCore.Http.HttpResults;
+
+namespace KeepGrouped.API.Problems;
+
+static public class UserProblems
+{
+    static public ProblemHttpResult NotFound(string id) => ProblemFactory.Create(
+        StatusCodes.Status404NotFound, "USER_NOT_FOUND",
+        "User not found",
+        $"No user has the id '{id}'.");
+
+    static public ProblemHttpResult NotAuthorized() => ProblemFactory.Create(
+        StatusCodes.Status401Unauthorized, "NOT_AUTHORIZED",
+        "Not authorize",
+        $"Your not authorize to do this action.");
+
+
+    static public ProblemHttpResult CannotChangeSelf() => ProblemFactory.Create(
+    StatusCodes.Status401Unauthorized, "CANNOT_CHANGE_SELF",
+    "You cannot change yourself",
+    $"You cannot interact to yourself'.");
+
+    static public ProblemHttpResult NameAlreadyUsed(string username) => ProblemFactory.Create(
+        StatusCodes.Status409Conflict, "NAME_ALREADY_USED",
+        "Username already used",
+        $"'{username}' is already used by an other user.");
+
+    static public ProblemHttpResult EmailAlreadyUsed(string email) => ProblemFactory.Create(
+        StatusCodes.Status409Conflict, "EMAIL_ALREADY_USED",
+        "Email already used",
+        $"'{email}' is already used by an other user.");
+
+    static public ProblemHttpResult NotAuthenticated() => ProblemFactory.Create(
+        StatusCodes.Status401Unauthorized, "NOT_AUTHENTICATED",
+        "Not authenticated",
+        "This operation acts on behalf of the current user, but no user is authenticated.");
+
+    static public ProblemHttpResult InvalidAvatarType(string contentType) => ProblemFactory.Create(
+        StatusCodes.Status422UnprocessableEntity, "INVALID_AVATAR_TYPE",
+        "Invalid avatar type",
+        $"'{contentType}' is not an image. The avatar must be an image file.");
+
+    static public ProblemHttpResult AvatarTooLarge(long max_size) => ProblemFactory.Create(
+    StatusCodes.Status413PayloadTooLarge, "AVATAR_TOO_LARGE",
+    "Avatar too large",
+    $"Avatar must be under {max_size / 1000000} Mb");
+
+    static public ProblemHttpResult InvalidLanguage(LanguageEnum language) => ProblemFactory.Create(
+        StatusCodes.Status400BadRequest, "INVALID_LANGUAGE",
+        "Invalid language",
+        $"'{(int)language}' is not a supported language.");
+
+    static public ProblemHttpResult UserCannotBeDelete() => ProblemFactory.Create(
+   StatusCodes.Status403Forbidden, "USER_CANNOT_BE_DELETED",
+   "User cannot be deleted",
+   "This user cannot be deleted");
+
+    static public ProblemHttpResult PasswordCannotBeChanged() => ProblemFactory.Create(
+  StatusCodes.Status403Forbidden, "PASSWORD_CANNOT_BE_CHANGED",
+  "Password cannot be changed",
+  "This user's password cannot be changed");
+
+    static public ProblemHttpResult UsernameCannotBeChanged() => ProblemFactory.Create(
+ StatusCodes.Status403Forbidden, "USERNAME_CANNOT_BE_CHANGED",
+ "Username cannot be changed",
+ "This user's name cannot be changed");
+
+    static public ProblemHttpResult EmailCannotBeChanged() => ProblemFactory.Create(
+ StatusCodes.Status403Forbidden, "EMAIL_CANNOT_BE_CHANGED",
+ "Email cannot be changed",
+ "This user's email cannot be changed");
+
+};

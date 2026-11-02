@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: forgejo.asventi.net/transcendence/frontend:latest
+    build: ./frontend
     container_name: keepgrouped-frontend
     hostname: keepgrouped-frontend
     restart: unless-stopped
@@ -15,7 +15,7 @@ services:
       - ${PORT:-4242}:443
 
   backend:
-    image: forgejo.asventi.net/transcendence/backend:latest
+    build: ./backend
     container_name: keepgrouped-backend
     hostname: keepgrouped-backend
     restart: unless-stopped
@@ -83,7 +83,7 @@ services:
       - backend-database
 
   ai-backend:
-    image: forgejo.asventi.net/transcendence/backend-ai:latest
+    build: ./backend-ia
     container_name: keepgrouped-ai-backend
     hostname: ai-back-dev
     restart: unless-stopped
@@ -111,7 +111,7 @@ services:
       ANONYMIZED_TELEMETRY: "false"
 
   llama:
-    image: forgejo.asventi.net/transcendence/keepgrouped-llama.cpp:latest
+    build: ./keepgrouped-llama.cpp
     container_name: keepgrouped-llama
     hostname: llama
     restart: unless-stopped

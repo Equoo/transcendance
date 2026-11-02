@@ -1,0 +1,58 @@
+
+using Microsoft.EntityFrameworkCore;
+using KeepGrouped.API.Users;
+using KeepGrouped.API.Problems;
+
+namespace KeepGrouped.API.Middlewares;
+
+public class TokenContext
+{
+	public User User { get; set; } = null!;
+}
+
+public class TokenContextMiddleware
+{
+	private readonly RequestDelegate _next;
+
+	public TokenContextMiddleware(RequestDelegate next)
+	{
+		_next = next;
+	}
+
+	public async Task InvokeAsync(HttpContext http, KeepGroupedDb db, TokenContext tcontext, TokenProvider provider)
+	{
+		string? token_cookie = TokenCookies.Get(http, "AccessToken");
+
+		if (token_cookie is null)
+		{
+			await _next(http);
+			return;
+		}
+
+		if (!provider.CanRead(token_cookie))
+		{
+			TokenCookies.Remove(http);
+			await UserProblems.NotAuthenticated().ExecuteAsync(http);
+			return;
+		}
+
+		string id = provider.ReadFirstClaim(token_cookie);
+
+		User? db_user = await db.Users
+			.Include(u => u.Role)
+			.Include(u => u.Avatar)
+			.Include(u => u.ChannelsAckMsg)
+			.SingleOrDefaultAsync(usr => usr.Id == id);
+
+		if (db_user is null)
+		{
+			TokenCookies.Remove(http);
+			await UserProblems.NotAuthenticated().ExecuteAsync(http);
+			return;
+		}
+
+		tcontext.User = db_user;
+
+		await _next(http);
+	}
+}
