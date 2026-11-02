@@ -18,17 +18,28 @@ Key features:
 
 ## Instructions
 
-Prerequisites: Docker with Compose, a machine with atleast 4 GB of RAM or a GPU with 4 GB of RAM for the LLM.
+Prerequisites:
+
+- Git
+- Docker Engine 29.3 or newer
+- Docker Compose v5.1 or newer
+- OpenSSL, to generate the secrets
+- A machine with at least 4 GB of RAM, or a GPU with 4 GB of VRAM, for the LLM
 
 1. Clone this repository.
-2. Fill the empty values in `compose.yaml`: database password, Garage access/secret/RPC keys, admin login and password, JWT key. Generate secrets with `openssl rand -hex 32`.
+2. Create the environment file and fill every value in it: port, server name, database password, Garage access/secret/RPC keys, admin login, email and password, JWT key. The comments in `.env.example` give the command to generate each secret.
+
+   ```bash
+   cp .env.example .env
+   ```
+
 3. Start everything:
 
    ```bash
    docker compose up -d
    ```
 
-4. Open <http://localhost:4242> and log in with the default admin account.
+4. Open <https://localhost:4242> (or the `PORT` set in `.env`) and log in with the default admin account. The TLS certificate is self-signed, so the browser shows a warning that you have to accept.
 
 The source code of each service lives in its own repository: `frontend`, `backend`, `backend-ia`, `keepgrouped-llama.cpp`.
 
@@ -36,8 +47,8 @@ The source code of each service lives in its own repository: `frontend`, `backen
 
 | Login | Role(s) | Responsibilities |
 | --- | --- | --- |
-| pjarnac | Product Owner & Developper | Events, file storage, AI integration in the backend, infrastructure and CI |
-| dernst | Project Manager & Developper | Authentication, users, roles, invitations, admin panel , multi-language|
+| pjarnac | Product Owner & Developper | Events, file storage, AI integration in the backend, infrastructure and CI, invitations |
+| dernst | Project Manager & Developper | Authentication, users, roles, admin panel, multi-language|
 | dderny | Technical Lead & Developper | Chat, channels, friends and relationships |
 | tjooris | Developper | AI service (RAG pipeline, chatbot) |
 
