@@ -38,9 +38,8 @@ export default function ListRoles({
     const fetcher = useFetcher();
 
     const outranked = user!.role.ranking < role.ranking;
-    // Member can be moved like any role, but never renamed nor deleted.
     const isMember = role.name === "Member";
-    const authorize = outranked && !isMember;
+    const authorize = outranked;
     const pending = fetcher.state !== "idle";
 
     const canMoveUp = Boolean(above && above.ranking > user!.role.ranking);
@@ -119,15 +118,13 @@ export default function ListRoles({
             <ListCell className="flex flex-row items-center justify-between w-full h-full px-6 py-3 ">
                 {outranked && (
                     <div className="flex gap-3 justify-center items-center">
-                        {!isMember && (
-                            <TbPencil
-                                size={26}
-                                className={` text-text2 hover:text-text cursor-pointer hover:animate-rotate`}
-                                onClick={() => {
-                                    setShowChangeRole(true);
-                                }}
-                            />
-                        )}
+                        <TbPencil
+                            size={26}
+                            className={` ${isMember ? "opacity-0" : "text-text2 hover:text-text cursor-pointer hover:animate-rotate"} `}
+                            onClick={() => {
+                                if (!isMember) setShowChangeRole(true);
+                            }}
+                        />
                         {(canMoveUp || canMoveDown) && (
                             <div>
                                 {canMoveUp && (
@@ -151,15 +148,14 @@ export default function ListRoles({
                                 )}
                             </div>
                         )}
-                        {!isMember && (
-                            <TbTrash
-                                size={26}
-                                className="hover:cursor-pointer text-text2 hover:text-text"
-                                onClick={() => {
-                                    setShowConfirmation(true);
-                                }}
-                            />
-                        )}
+
+                        <TbTrash
+                            size={26}
+                            className={` ${isMember ? "opacity-0" : "text-text2 hover:text-text cursor-pointer hover:animate-rotate"} `}
+                            onClick={() => {
+                                if (!isMember) setShowConfirmation(true);
+                            }}
+                        />
                     </div>
                 )}
             </ListCell>
