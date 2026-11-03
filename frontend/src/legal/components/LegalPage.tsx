@@ -8,8 +8,6 @@ import LanguageSwitcher from "../../components/LanguageSwitcher";
 
 export type LegalDoc = "privacy" | "terms";
 
-// Section keys, in display order. Content lives in translations under
-// `legal.<doc>.sections.<key>` as { title, body } with a Markdown body.
 const sections: Record<LegalDoc, string[]> = {
 	privacy: [
 		"intro",

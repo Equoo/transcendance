@@ -46,18 +46,13 @@ interface ComposerImage {
 interface EmojiMartEmoji {
 	id: string;
 	name: string;
-	// Undefined for custom emoji
 	native?: string;
-	// E.g. "1f44d"
 	unified?: string;
 	keywords: string[];
-	// ":+1:"
 	shortcodes: string;
 	emoticons?: string[];
 	aliases?: string[];
-	// 1–6, only when a skin tone is picked
 	skin?: number;
-	// Custom emoji image URL
 	src?: string;
 }
 export interface ChatComposerHandles {
@@ -182,7 +177,6 @@ function ChatComposer({
 			selection.removeAllRanges();
 			selection.addRange(range);
 		} else {
-			// Fallback for older browsers or non-editable contexts
 			// eslint-disable-next-line @typescript-eslint/no-deprecated
 			document.execCommand("insertText", false, text);
 		}

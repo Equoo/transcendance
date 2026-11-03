@@ -19,7 +19,6 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 		return res.error;
 	}
 
-	// New accounts start in English: keep the language picked on this page.
 	const language = Language[i18n.language as keyof typeof Language];
 	if (language !== Language.en) {
 		const languageForm = new FormData();

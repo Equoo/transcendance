@@ -1,10 +1,5 @@
 import { useEffect } from "react";
 
-/**
- * Exposes the visible viewport height as `--app-height` so the app shrinks
- * above the virtual keyboard. Android handles it with the `interactive-widget`
- * viewport hint, but iOS Safari keeps the layout viewport full height.
- */
 export function useViewportHeight(): void {
 	useEffect(() => {
 		const viewport = window.visualViewport;
@@ -15,7 +10,6 @@ export function useViewportHeight(): void {
 				return;
 			}
 			root.style.setProperty("--app-height", `${viewport.height}px`);
-			// iOS scrolls the whole page to reveal the focused field
 			window.scrollTo(0, 0);
 		}
 

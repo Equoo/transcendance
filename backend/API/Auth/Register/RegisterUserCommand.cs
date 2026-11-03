@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KeepGrouped.API.Users;
 
-/// <summary>Handler-to-endpoint carrier: the endpoint alone turns the tokens into cookies.</summary>
 public sealed record RegisteredUser(RegisterResponse User, IssuedTokens Tokens);
 
 public sealed class RegisterUserCommand(KeepGroupedDb db, KeepGroupedPasswordHasher hash, TokenProvider provider) : IHandler

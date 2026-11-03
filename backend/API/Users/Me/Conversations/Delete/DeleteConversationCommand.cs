@@ -29,7 +29,6 @@ public sealed class DeleteConversationCommand(KeepGroupedDb db, IHubContext<Keep
 		conversation.Members.Remove(membership);
 		db.ChannelMembers.Remove(membership);
 
-		// The last member leaving takes the conversation with them.
 		if (conversation.Members.Count == 0)
 		{
 			db.Channels.Remove(conversation);

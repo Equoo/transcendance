@@ -77,8 +77,6 @@ export async function hubSend(
 	}
 }
 
-// The hub reports problems as "...HubException: <errorCode>": turn them into
-// APIErrors so they are translated like the HTTP ones.
 function hubError(code: string): APIError {
 	const errorCode = code === "USER_NOT_AUTHENTICATED" ? "NOT_AUTHENTICATED" : code;
 	return new APIError({

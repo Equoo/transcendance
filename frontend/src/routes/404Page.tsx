@@ -11,7 +11,6 @@ export default function Page404(): JSX.Element {
 	const navigate = useNavigate();
 	const location = useLocation();
 
-	// The first entry of the history has the "default" key: nothing to go back to.
 	const canGoBack = location.key !== "default";
 
 	return (

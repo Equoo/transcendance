@@ -34,10 +34,6 @@ static public class EventProblems
         "Event size below its registrations",
         $"The event already has {registered} participants, its size cannot be lowered to {size}.");
 
-    /// <summary>
-    /// The implicit `Any` role is expected to be seeded; without it an event cannot be created.
-    /// This is a server-side inconsistency, not a caller mistake.
-    /// </summary>
     static public ProblemHttpResult DefaultRoleMissing() => ProblemFactory.Create(
         StatusCodes.Status500InternalServerError, "EVENT_DEFAULT_ROLE_MISSING",
         "Default event role missing",

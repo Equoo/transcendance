@@ -25,11 +25,6 @@ export interface SidebarMenuRow {
 	danger?: boolean;
 }
 
-/**
- * Long press menu of a sidebar item, on touch devices only: desktop keeps
- * the hover buttons. Spread `pressProps` and add `pressClass` on the
- * (positioned) pressed element.
- */
 export function useSidebarMenu(enabled: boolean): {
 	active: boolean;
 	pressProps: ReturnType<typeof useLongPress> | null;

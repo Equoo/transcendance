@@ -16,7 +16,6 @@ public record GetMeResponse(string Id, string UserName, string Email, GetFileMet
 
 public static class GetMeEndpoint
 {
-    // No handler: returning the current user touches neither the database nor the object store.
     public static void MapGetMe(this IEndpointRouteBuilder me)
     {
         me.MapGet(

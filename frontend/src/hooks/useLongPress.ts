@@ -17,7 +17,6 @@ const FEEDBACK_DELAY = 120;
 
 let touchActiveReady = false;
 
-/** iOS Safari only applies :active styles once a touch listener exists */
 export function ensureTouchActive(): void {
 	if (!touchActiveReady && typeof document !== "undefined") {
 		touchActiveReady = true;
@@ -43,13 +42,6 @@ interface LongPressHandlers {
 	onKeyDown: (ev: KeyboardEvent<HTMLElement>) => void;
 }
 
-/**
- * Long press (touch / pen only, never mouse), right click and the
- * keyboard context-menu key all call `onLongPress` with a screen point
- * and the pressed element.
- * Spread the returned props on the element and give it the
- * `hold-fill no-callout` classes for the visual feedback.
- */
 export function useLongPress(
 	onLongPress: (point: PressPoint, target: HTMLElement) => void,
 	{ delay = 450, disabled = false }: { delay?: number; disabled?: boolean } = {},
@@ -103,7 +95,6 @@ export function useLongPress(
 	return {
 		...(pressing && { "data-pressing": true }),
 		onPointerDown(ev): void {
-			// Desktop uses right click: holding the mouse does nothing
 			if (disabled || ev.button !== 0 || ev.pointerType === "mouse") {
 				return;
 			}

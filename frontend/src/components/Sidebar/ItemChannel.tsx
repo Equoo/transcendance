@@ -28,8 +28,6 @@ function ItemChannel({
 	const canEdit = Boolean(user.role.permission & PermEnum.HandleChannels);
 	const menu = useSidebarMenu(canEdit);
 
-	// The menu renders in portals: kept outside the <li> so its events do not
-	// bubble into the long press handlers
 	return (
 		<>
 		<li

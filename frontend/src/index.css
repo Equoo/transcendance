@@ -268,7 +268,6 @@ body,
 }
 
 @layer components {
-	/* Long press feedback (see useLongPress): the element must be positioned */
 	.hold-fill {
 		isolation: isolate;
 		transition: scale 200ms ease-out;
@@ -295,7 +294,6 @@ body,
 	.hold-fill[data-pressing] {
 		scale: 0.985;
 	}
-	/* Fills over the remaining hold time (delay 450ms - feedback 120ms) */
 	.hold-fill[data-pressing]::before {
 		transform: scaleX(1);
 		opacity: 1;
@@ -311,7 +309,6 @@ body,
 		}
 	}
 
-	/* Keep the native callout and text selection from fighting the long press */
 	.no-callout {
 		-webkit-touch-callout: none;
 		-webkit-user-select: none;
@@ -367,7 +364,6 @@ body,
 	}
 }
 
-/* Markdown rendered inside chatbot bubbles */
 .chat-md {
 	& > * + * {
 		margin-top: 0.6em;

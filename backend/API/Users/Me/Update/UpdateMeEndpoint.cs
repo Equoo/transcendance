@@ -4,10 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace KeepGrouped.API.Users;
 
-/// <summary>
-/// Renaming is all this use case does, so it asks for a name and nothing else — a password sent
-/// here used to be accepted and ignored.
-/// </summary>
 public record UpdateMeRequest
 {
 	[Required]

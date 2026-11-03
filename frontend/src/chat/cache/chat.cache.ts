@@ -10,8 +10,6 @@ import type {
 	MessageCursor,
 } from "../api/chat.api";
 
-// Pages are ordered newest first: "next" pages are older, "previous" are newer.
-// A null cursor on the first page means the window reaches the latest message.
 export type MessagePages = InfiniteData<Message[], MessageCursor>;
 
 export const MESSAGES_PAGE_SIZE = 10;

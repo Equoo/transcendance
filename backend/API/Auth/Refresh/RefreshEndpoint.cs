@@ -1,6 +1,5 @@
 namespace KeepGrouped.API.Users;
 
-/// <summary>Who the rotated session now belongs to.</summary>
 public record RefreshResponse(string Id, string UserName)
 {
     public static RefreshResponse FromEntity(User user) => new(user.Id, user.UserName);
@@ -16,7 +15,6 @@ public static class RefreshEndpoint
             var result = await command.ExecuteAsync(TokenCookies.Get(http, "RefreshToken"));
             if (result.IsProblem)
             {
-                // Every failure path of this route drops the cookies before answering.
                 TokenCookies.Remove(http);
                 return result.Problem;
             }

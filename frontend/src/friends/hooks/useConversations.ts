@@ -14,7 +14,6 @@ export function useConversations() {
 		queryKey: friendsKeys.conversations,
 		queryFn: async ({ pageParam }): Promise<Conversation[]> => fetchConvs(PAGE_SIZE, pageParam),
 		initialPageParam: null as Date | null,
-		// Pages come most recently active first: the cursor is the page's oldest activity
 		getNextPageParam: (lastPage) => {
 			const oldest = lastPage.at(-1);
 			return !oldest || lastPage.length < PAGE_SIZE ? null : oldest.lastMessage?.sentAt ?? oldest.createAt;

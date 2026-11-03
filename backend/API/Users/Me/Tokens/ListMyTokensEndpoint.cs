@@ -3,10 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace KeepGrouped.API.Users;
 
-/// <summary>
-/// One live session of the current user. <c>Id</c> is the SHA-256 of the refresh token, never the
-/// token itself — it identifies the session without being usable to authenticate.
-/// </summary>
 public record ListMyTokensResponse(string Id)
 {
     public static ListMyTokensResponse FromEntity(RefreshToken token) => new(token.Id);

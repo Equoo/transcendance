@@ -21,10 +21,6 @@ type Dialog = "rename" | "move" | "delete";
 
 const NAME_MAX_LENGTH = 100;
 
-/**
- * Rename / move / delete menu for a file (`fileKey` set) or a folder
- * (`fileKey` unset, the folder being `parent + name + "/"`).
- */
 export default function ItemActions({
 	fileKey,
 	parent,

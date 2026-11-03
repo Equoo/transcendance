@@ -1,6 +1,5 @@
 namespace KeepGrouped.API.Users;
 
-/// <summary>The only place where authentication tokens meet HTTP. Used from endpoints and middlewares, never from handlers.</summary>
 public static class TokenCookies
 {
     public static void Write(HttpContext http, IssuedTokens tokens)

@@ -81,8 +81,6 @@ const dateFnsLocales: Record<string, Locale> = {
 	tc: zhTW,
 };
 
-// Components pass `i18n.language` from useTranslation() so that the React
-// Compiler sees the language as a dependency and recomputes dates on change.
 export function dateLocale(lng: string): string {
 	return htmlLang[lng] ?? "en";
 }
@@ -91,8 +89,6 @@ export function dateFnsLocale(lng: string): Locale {
 	return dateFnsLocales[lng] ?? enUS;
 }
 
-// Keep <html lang> in sync so CSS (:lang()) and the browser pick the right
-// fonts and line-breaking rules for the active language.
 function syncHtmlLang(lng: string): void {
 	if (typeof document !== "undefined") {
 		document.documentElement.lang = htmlLang[lng] ?? "en";

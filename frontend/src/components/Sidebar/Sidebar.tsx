@@ -71,7 +71,6 @@ function Sidebar({ user }: { user: User }): JSX.Element {
 	const [showSide, setShowSide] = useState(false);
 	const [showUser, setShowUser] = useState(false);
 
-	// Drawer only matters below `lg`, where it closes on every navigation.
 	const [prevPath, setPrevPath] = useState(location.pathname);
 	if (prevPath !== location.pathname) {
 		setPrevPath(location.pathname);
