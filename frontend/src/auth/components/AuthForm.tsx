@@ -46,21 +46,7 @@ export function AuthTitle({
 
 export function AuthLogo({ side }: { side: Side }): JSX.Element {
 	// eslint-disable-next-line @eslint-react/purity, react-hooks/purity
-	const randomNumber: number = Date.now();
-
-	let animChoice: string;
-	let animTime: string;
 	let sideCss: string;
-
-	if (randomNumber % 15) {
-		animChoice = "animate-spin";
-		animTime = "[animation-duration:200s]";
-	} else {
-		// eslint-disable-next-line no-console
-		console.log("Bounce KG Rebondit");
-		animChoice = "animate-bounce";
-		animTime = "[animation-duration:2s]";
-	}
 
 	if (side === "l") {
 		sideCss = "ml-200";
@@ -73,7 +59,7 @@ export function AuthLogo({ side }: { side: Side }): JSX.Element {
 			<img
 				src="/logo/icon-mono.svg"
 				alt=""
-				className={`min-w-100 scale-500 opacity-20 ${animChoice} ${animTime} `}
+				className={`min-w-100 scale-500 opacity-20`}
 			/>
 		</div>
 	);
