@@ -6,11 +6,11 @@ namespace KeepGrouped.API.AiBackend;
 
 public static class AiBackendEndpoints
 {
-	public static void MapAiBackend(this IEndpointRouteBuilder app)
+	public static void MapAiBackend(this IEndpointRouteBuilder app, string url)
 	{
 		var aibackend = app.MapGroup("/ai").WithTags("AiBackend");
 
 		aibackend.MapChatBot();
-		aibackend.MapHealthCheck();
+		aibackend.MapHealthCheck(url);
 	}
 }

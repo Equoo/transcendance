@@ -5,7 +5,7 @@ namespace KeepGrouped.API.AiBackend.HealthCheck;
 
 public static class HealthCheckEndpoints
 {
-	public static void MapHealthCheck(this IEndpointRouteBuilder aibackend)
+	public static void MapHealthCheck(this IEndpointRouteBuilder aibackend, string url)
 	{
 		var HealthCheck = aibackend.MapGroup("/health");
 
@@ -14,7 +14,7 @@ public static class HealthCheckEndpoints
 
 			try
 			{
-				using var response = await client.GetAsync("http://ai-back-dev:7070/health");
+				using var response = await client.GetAsync(url + "/health");
 
 				return response.IsSuccessStatusCode
 					? Results.Ok(new { status = "healthy" })

@@ -36,24 +36,26 @@ class Program
 			options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 		});
 
-        builder.Services.ConfigureHttpJsonOptions(options =>
-        {
-            options.SerializerOptions.Converters.Add(new NulFreeStringConverter());
-        });
+		builder.Services.ConfigureHttpJsonOptions(options =>
+		{
+			options.SerializerOptions.Converters.Add(new NulFreeStringConverter());
+		});
 
-        builder.Services.AddProblemDetails();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddValidation();
-        builder.Services.AddSignalR().AddJsonProtocol(options =>
-        {
-            options.PayloadSerializerOptions.Converters.Add(new NulFreeStringConverter());
-        });
-        builder.Services.AddSingleton<ConnectionTracker>();
+		builder.Services.AddProblemDetails();
+		builder.Services.AddEndpointsApiExplorer();
+		builder.Services.AddValidation();
+		builder.Services.AddSignalR().AddJsonProtocol(options =>
+		{
+			options.PayloadSerializerOptions.Converters.Add(new NulFreeStringConverter());
+		});
+		builder.Services.AddSingleton<ConnectionTracker>();
 
 		if (builder.Environment.IsDevelopment())
 		{
 			builder.Services.AddSwaggerGen();
 		}
+		var serviceUrl = builder.Configuration["Ai:ServiceUrl"]
+			?? throw new InvalidOperationException("Ai:ServiceUrl is missing");
 		var app = builder.Build();
 		app.Services.GetRequiredService<IStartupValidator>().Validate();
 		app.UseForwardedHeaders();
@@ -84,7 +86,7 @@ class Program
 		app.MapInvitations();
 		app.MapRoles();
 		app.MapHub<KeepGroupedHub>("");
-		app.MapAiBackend();
+		app.MapAiBackend(serviceUrl);
 		app.MapCategories();
 		app.MapChannels();
 		app.MapMessages();
