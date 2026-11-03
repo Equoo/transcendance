@@ -59,7 +59,7 @@ export function AuthLogo({ side }: { side: Side }): JSX.Element {
 			<img
 				src="/logo/icon-mono.svg"
 				alt=""
-				className={`min-w-100 scale-500 opacity-20`}
+				className={`min-w-100 scale-500 opacity-20 animate-spin [animation-duration:200s]`}
 			/>
 		</div>
 	);
