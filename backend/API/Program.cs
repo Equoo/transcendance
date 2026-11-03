@@ -9,6 +9,7 @@ using KeepGrouped.API.Users.Invitations;
 using KeepGrouped.API.RateLimiting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace KeepGrouped.API;
 
@@ -52,6 +53,7 @@ class Program
 			builder.Services.AddSwaggerGen();
 		}
 		var app = builder.Build();
+		app.Services.GetRequiredService<IStartupValidator>().Validate();
 		app.UseForwardedHeaders();
 		app.UseStatusCodePages();
 		if (app.Environment.IsDevelopment())

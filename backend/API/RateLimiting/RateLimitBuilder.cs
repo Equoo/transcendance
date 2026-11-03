@@ -8,6 +8,11 @@ public static class RateLimitBuilder
 {
 	public static void BuildRateLimiting(this WebApplicationBuilder builder)
 	{
+		builder.Services.AddOptions<RateLimitOptions>()
+			.Bind(builder.Configuration.GetSection(RateLimitOptions.SectionName))
+			.ValidateDataAnnotations()
+			.ValidateOnStart();
+
 		var opts = builder.Configuration
 			.GetSection(RateLimitOptions.SectionName)
 			.Get<RateLimitOptions>() ?? new();
