@@ -21,8 +21,8 @@ public class Relationship
 	public DateTime Since { get; init; } = DateTime.UtcNow;
 }
 
-public record RelationshipResponse(string Id, UserSummary User, string? Nickname, RelationshipState Type, DateTime Since)
+public record RelationshipResponse(string Id, GetUserResponse User, string? Nickname, RelationshipState Type, DateTime Since)
 {
 	public static RelationshipResponse FromEntity(Relationship relationship) => new(relationship.Id,
-		UserSummary.FromEntity(relationship.User), relationship.Nickname, relationship.Type, relationship.Since);
+		GetUserResponse.FromEntity(relationship.User), relationship.Nickname, relationship.Type, relationship.Since);
 }
