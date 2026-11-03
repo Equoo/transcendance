@@ -16,8 +16,8 @@ function atHour(day: Date, hours: number): Date {
 	return set(day, { hours, minutes: 0, seconds: 0, milliseconds: 0 });
 }
 
-function formatLong(date: Date): string {
-	return date.toLocaleString(dateLocale(), {
+function formatLong(date: Date, lng: string): string {
+	return date.toLocaleString(dateLocale(lng), {
 		hour: "2-digit",
 		minute: "2-digit",
 		month: "short",
@@ -26,8 +26,8 @@ function formatLong(date: Date): string {
 	});
 }
 
-function formatShort(date: Date): string {
-	return date.toLocaleString(dateLocale(), {
+function formatShort(date: Date, lng: string): string {
+	return date.toLocaleString(dateLocale(lng), {
 		weekday: "short",
 		day: "numeric",
 		month: "short",
@@ -46,7 +46,7 @@ function DatePicker({
 	onChange: (value: string) => void;
 }): JSX.Element {
 	// eslint-disable-next-line id-length
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const [now] = useState(() => new Date());
 
 	const picks = [
@@ -97,7 +97,7 @@ function DatePicker({
 								{pick.label}
 							</span>
 							<span className="text-xs text-muted capitalize">
-								{formatShort(pick.date)}
+								{formatShort(pick.date, i18n.language)}
 							</span>
 						</button>
 					);
@@ -145,7 +145,7 @@ export default function DateSlot({
 	errors?: string[];
 }): JSX.Element {
 	// eslint-disable-next-line id-length
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const date = value === "" ? null : new Date(value);
 
 	return (
@@ -175,7 +175,7 @@ export default function DateSlot({
 						<PiClock className="shrink-0" />
 						{date ? (
 							<time dateTime={date.toISOString()}>
-								{formatLong(date)}
+								{formatLong(date, i18n.language)}
 							</time>
 						) : (
 							<span className="text-muted">

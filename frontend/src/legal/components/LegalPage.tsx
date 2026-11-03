@@ -91,7 +91,7 @@ export default function LegalPage({ doc }: { doc: LegalDoc }): JSX.Element {
 					</h3>
 					<h1 className="text-4xl sm:text-5xl font-semibold font-head text-text tracking-tight">
 						{t(`legal.${doc}.title`)}
-						<span className="text-accent">.</span>
+						<span className="text-accent">{t("common.fullStop")}</span>
 					</h1>
 					<p className="text-sm text-muted">
 						{t("legal.lastUpdated", {

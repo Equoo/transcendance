@@ -1,4 +1,5 @@
 import type { JSX } from "react";
+import { useTranslation } from "react-i18next";
 
 const dotDelays = [
 	"[animation-delay:0ms]",
@@ -7,6 +8,9 @@ const dotDelays = [
 ];
 
 export default function HydratingScreen(): JSX.Element {
+	// eslint-disable-next-line id-length
+	const { t } = useTranslation();
+
 	return (
 		<div
 			role="status"
@@ -31,7 +35,7 @@ export default function HydratingScreen(): JSX.Element {
 						Keep Grouped<span className="text-accent">.</span>
 					</h1>
 					<p className="text-sm text-muted">
-						Getting your group ready
+						{t("hydrating.tagline")}
 					</p>
 				</div>
 
@@ -43,7 +47,7 @@ export default function HydratingScreen(): JSX.Element {
 						/>
 					))}
 				</div>
-				<span className="sr-only">Loading…</span>
+				<span className="sr-only">{t("common.loading")}</span>
 			</div>
 		</div>
 	);

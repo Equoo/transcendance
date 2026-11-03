@@ -14,7 +14,7 @@ export const MAX_FILE_SIZE = 29_000_000;
 export function formatSize(bytes: number, t: TFunction): string {
 	return bytes < 1_000_000
 		? t("files.sizeKb", { size: Math.max(1, Math.round(bytes / 1000)) })
-		: t("files.sizeMb", { size: (bytes / 1_000_000).toFixed(1) });
+		: t("files.sizeMb", { size: bytes / 1_000_000 });
 }
 
 export default function Dropzone({

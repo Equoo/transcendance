@@ -10,6 +10,7 @@ import { ListCell, ListRow } from "../../components/List/List";
 import type { AppFile } from "../api/files.api";
 import { FileIcon } from "./FileIcon";
 import ItemActions from "./ItemActions";
+import { formatSize } from "./UploadDropzone";
 
 export default function FileItem({
 	file,
@@ -40,13 +41,7 @@ export default function FileItem({
 				</Link>
 			</ListCell>
 			<ListCell>
-				{file.length / 1000000 < 1
-					? t("files.sizeKb", {
-							size: Math.floor(file.length / 1000),
-						})
-					: t("files.sizeMb", {
-							size: Math.floor(file.length / 1000000),
-						})}
+				{formatSize(file.length, t)}
 			</ListCell>
 			{Boolean(user!.role.permission & PermEnum.HandleKnowledge) && (
 				<ListCell>

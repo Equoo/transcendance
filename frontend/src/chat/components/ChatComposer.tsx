@@ -11,7 +11,7 @@ import {
 	useRef,
 	useState,
 } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { BsSend } from "react-icons/bs";
 import { PiImage, PiSmiley, PiX } from "react-icons/pi";
 
@@ -383,7 +383,11 @@ function ChatComposer({
 		>
 			{showPicker && (
 				<div className="absolute bottom-full left-0" ref={pickerRef}>
-					<Picker data={data} onEmojiSelect={handleEmojiSelect} />
+					<Picker
+						data={data}
+						i18n={t("emojiPicker", { returnObjects: true })}
+						onEmojiSelect={handleEmojiSelect}
+					/>
 				</div>
 			)}
 
@@ -399,17 +403,22 @@ function ChatComposer({
 						}}
 					>
 						{chatMode === "edit" ? (
-							<>{t("chat.editingMessage")}</>
+							<Trans
+								i18nKey="chat.editingMessage"
+								components={{ key: <kbd className="font-semibold" /> }}
+							/>
 						) : (
-							<>
-								{t("chat.replyingTo", {
+							<Trans
+								i18nKey="chat.replyingTo"
+								values={{
 									name:
 										(modeTarget &&
 											resolveUser(modeTarget.sender, user)
 												.userName) ??
 										t("common.unknown"),
-								})}
-							</>
+								}}
+								components={{ key: <kbd className="font-semibold" /> }}
+							/>
 						)}
 					</a>
 					<Tooltip

@@ -5,6 +5,7 @@ import { useFetcher } from "react-router";
 import { Field } from "@/components/Input/Field";
 import { Select } from "@/components/Input/Select";
 import Modal, { ModalFooter } from "@/components/Modal/Modal";
+import { roleLabel } from "@/utils/role.util";
 
 import CheckButton from "../../components/Button/CheckButton";
 import { type EventSummary, isEventFull } from "../api/events.api";
@@ -79,7 +80,7 @@ export default function EventRegisterBtn({
 								}
 								options={eventRoles.map((er) => ({
 									value: er.id,
-									label: er.name,
+									label: roleLabel(t, er.name),
 								}))}
 							/>
 						</Field>

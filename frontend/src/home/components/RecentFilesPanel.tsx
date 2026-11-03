@@ -23,7 +23,7 @@ function FileRows({
 	limit: number;
 }): JSX.Element {
 	// eslint-disable-next-line id-length
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const recent = getRecentFiles(files, limit);
 
 	if (recent.length === 0) {
@@ -55,7 +55,7 @@ function FileRows({
 								className="text-muted text-[12.5px] shrink-0"
 							>
 								{new Date(file.lastUpdated).toLocaleDateString(
-									dateLocale(),
+									dateLocale(i18n.language),
 									{ day: "2-digit", month: "short" },
 								)}
 							</time>

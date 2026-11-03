@@ -94,7 +94,7 @@ export default function Calendar({
 	loaderData,
 }: Route.ComponentProps): JSX.Element {
 	// eslint-disable-next-line id-length
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const [selectedDay, setSelectedDay] = useState(() => startOfToday());
 	const [month, setMonth] = useState(() => startOfMonth(selectedDay));
 
@@ -141,8 +141,8 @@ export default function Calendar({
 						<FiChevronLeft size={21} />
 					</button>
 					<div className="text-text font-head font-semibold select-none capitalize">
-						{format(month, "LLLL yyyy", {
-							locale: dateFnsLocale(),
+						{format(month, t("calendar.monthFormat"), {
+							locale: dateFnsLocale(i18n.language),
 						})}
 					</div>
 					<button
@@ -161,12 +161,12 @@ export default function Calendar({
 						<span key={day.toString()} className="text-text2">
 							<span className="sm:hidden">
 								{format(day, "EEEEE", {
-									locale: dateFnsLocale(),
+									locale: dateFnsLocale(i18n.language),
 								})}
 							</span>
 							<span className="hidden sm:inline">
 								{format(day, "EEE", {
-									locale: dateFnsLocale(),
+									locale: dateFnsLocale(i18n.language),
 								})}
 							</span>
 						</span>

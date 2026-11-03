@@ -28,6 +28,7 @@ import {
 } from "@/friends/hooks/useRelationships";
 import { matchesSearch } from "@/friends/utils/friends.util";
 import type { User } from "@/users/api/users";
+import { roleLabel } from "@/utils/role.util";
 
 const GROUPS: [ActivityEnum, string][] = [
 	[ActivityEnum.Online, "home.status.online"],
@@ -75,7 +76,7 @@ function MemberRow({
 					)}
 				</p>
 				<p className="text-muted text-[12.5px] truncate">
-					{user.role.name}
+					{roleLabel(t, user.role.name)}
 				</p>
 			</div>
 			{!isSelf && (

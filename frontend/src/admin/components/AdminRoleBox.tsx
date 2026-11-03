@@ -6,6 +6,7 @@ import { useFetcher } from "react-router";
 
 import { useUser } from "@/users/hooks/users";
 import { toastError } from "@/utils/error.util";
+import { roleLabel } from "@/utils/role.util";
 
 import type { Role } from "../api/roles";
 import type { clientAction } from "../routes/RolesAction";
@@ -53,7 +54,7 @@ export function RolesBox({
 						: "admin.permissionRevoked",
 					{
 						perm: t(`permissions.${perm.name}`),
-						role: role.name,
+						role: roleLabel(t, role.name),
 					},
 				),
 			);
@@ -68,7 +69,7 @@ export function RolesBox({
 				type="checkbox"
 				aria-label={t("admin.permissionFor", {
 					perm: t(`permissions.${perm.name}`),
-					role: role.name,
+					role: roleLabel(t, role.name),
 				})}
 				checked={check}
 				className={`checkbox text-accent rounded-sm w-6 h-6 text-2xl ${anim ? "animate-checked" : ""} ${authorize ? "cursor-pointer" : ""} ${check && authorize ? "hover:brightness-110" : "brightness-100"}`}

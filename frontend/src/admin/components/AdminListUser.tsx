@@ -9,6 +9,7 @@ import ChangeModal from "@/components/Modal/ChangeModal";
 import ChoiceModal from "@/components/Modal/ChoiceModal";
 import ProfilePic from "@/components/Profile/ProfilePic";
 import Promisable from "@/components/Promisable";
+import { roleLabel } from "@/utils/role.util";
 
 import type { User } from "../../users/api/users";
 import { PermEnum, type Role } from "../api/roles";
@@ -125,7 +126,7 @@ export default function ListUsers({
 										)
 										.map((rl) => ({
 											value: rl.name,
-											label: rl.name,
+											label: roleLabel(t, rl.name),
 										}))}
 									onChange={(value) => {
 										const role = listRole.find(
@@ -150,14 +151,14 @@ export default function ListUsers({
 												toast.success(
 													t("admin.userRoleChanged", {
 														name: user.userName,
-														role: role.name,
+														role: roleLabel(t, role.name),
 													}),
 												);
 											});
 									}}
 								/>
 							) : (
-								<h1>{user.role.name}</h1>
+								<h1>{roleLabel(t, user.role.name)}</h1>
 							)
 						}
 					</Promisable>

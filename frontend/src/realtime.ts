@@ -4,6 +4,7 @@ import { useEffect } from "react";
 
 import { useActivity } from "./activity/hooks/activity.hook";
 import { useActivityRealtime } from "./activity/realtime/useActivityRealtime";
+import { APIError } from "./api/problem_detail";
 import { useChatRealtime } from "./chat/realtime/useChatRealtime";
 import { useConversationRealtime } from "./friends/realtime/useConversationRealtime";
 import { useRelationshipRealtime } from "./friends/realtime/useRelationshipRealtime";
@@ -76,6 +77,20 @@ export async function hubSend(
 	}
 }
 
+// The hub reports problems as "...HubException: <errorCode>": turn them into
+// APIErrors so they are translated like the HTTP ones.
+function hubError(code: string): APIError {
+	const errorCode = code === "USER_NOT_AUTHENTICATED" ? "NOT_AUTHENTICATED" : code;
+	return new APIError({
+		type: "",
+		title: i18n.t("errors.somethingWrong"),
+		status: 0,
+		detail: errorCode,
+		errorCode,
+		traceId: "",
+	});
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function hubInvoke<T = any>(
 	method: string,
@@ -83,9 +98,16 @@ export async function hubInvoke<T = any>(
 ): Promise<T> {
 	const connection = getConnection();
 	if (connection.state !== HubConnectionState.Connected) {
-		throw new Error(i18n.t("apiErrors.codes.NOT_AUTHENTICATED"));
+		throw hubError("NOT_AUTHENTICATED");
 	}
-	return connection.invoke(method, ...args);
+	try {
+		return await connection.invoke<T>(method, ...args);
+	} catch (error) {
+		const code =
+			error instanceof Error &&
+			/HubException: (?<code>[A-Z_]+)$/u.exec(error.message)?.groups?.code;
+		throw code ? hubError(code) : error;
+	}
 }
 
 export function useRealtime(): void {

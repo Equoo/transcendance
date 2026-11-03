@@ -135,17 +135,16 @@ export default function EventCard({
 }: {
 	event: EventSummary;
 }): JSX.Element {
+	// eslint-disable-next-line id-length
+	const { t, i18n } = useTranslation();
 	const date = new Date(event.date);
-	const formattedDate = date.toLocaleString(dateLocale(), {
+	const formattedDate = date.toLocaleString(dateLocale(i18n.language), {
 		hour: "2-digit",
 		minute: "2-digit",
 		month: "short",
 		day: "2-digit",
 		year: "numeric",
 	});
-
-	// eslint-disable-next-line id-length
-	const { t } = useTranslation();
 
 	return (
 		<div className="@container bg-surface flex w-full max-w-md shrink-0 min-w-0 snap-start flex-col gap-4 border border-border rounded-3xl p-5 shadow-main sm:p-8">

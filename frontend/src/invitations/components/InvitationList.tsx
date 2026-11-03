@@ -14,7 +14,7 @@ export default function InvitationList({
 	invitations: Invitation[];
 }): JSX.Element {
 	// eslint-disable-next-line id-length
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const fetcher = useFetcher<typeof clientAction>();
 	return (
 		<List
@@ -35,7 +35,7 @@ export default function InvitationList({
 						{invitation.usages === -1
 							? t("invitations.never")
 							: new Date(invitation.expireAt).toLocaleString(
-									dateLocale(),
+									dateLocale(i18n.language),
 								)}
 					</ListCell>
 					<ListCell pos="text-center">

@@ -1,6 +1,8 @@
 import type { JSX } from "react";
+import { useTranslation } from "react-i18next";
 
 import type { User } from "@/users/api/users";
+import { roleLabel } from "@/utils/role.util";
 
 import ProfilePic from "./ProfilePic";
 
@@ -19,6 +21,9 @@ export default function ProfileLine({
 	watch?: boolean;
 	size?: 1 | 2 | 3;
 }): JSX.Element {
+	// eslint-disable-next-line id-length
+	const { t } = useTranslation();
+
 	return (
 		<div className="flex gap-3 items-center w-full">
 			<ProfilePic
@@ -34,7 +39,7 @@ export default function ProfileLine({
 					{user.userName}
 				</p>
 				<p className="text-text2 text-2xs font-medium truncate">
-					{user.role.name}
+					{roleLabel(t, user.role.name)}
 				</p>
 			</div>
 		</div>

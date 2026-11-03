@@ -16,6 +16,12 @@ const resources = {
 
 const supportedLanguages = ["fr", "en", "tc"] as const;
 
+export const languages = [
+	{ code: "fr", flag: "🇫🇷", label: "Français" },
+	{ code: "en", flag: "🇬🇧", label: "English" },
+	{ code: "tc", flag: "🇹🇼", label: "繁體中文" },
+] as const;
+
 const storageKey = "language";
 
 function readStoredLanguage(): string | null {
@@ -75,12 +81,14 @@ const dateFnsLocales: Record<string, Locale> = {
 	tc: zhTW,
 };
 
-export function dateLocale(): string {
-	return htmlLang[i18n.language] ?? "en";
+// Components pass `i18n.language` from useTranslation() so that the React
+// Compiler sees the language as a dependency and recomputes dates on change.
+export function dateLocale(lng: string): string {
+	return htmlLang[lng] ?? "en";
 }
 
-export function dateFnsLocale(): Locale {
-	return dateFnsLocales[i18n.language] ?? enUS;
+export function dateFnsLocale(lng: string): Locale {
+	return dateFnsLocales[lng] ?? enUS;
 }
 
 // Keep <html lang> in sync so CSS (:lang()) and the browser pick the right

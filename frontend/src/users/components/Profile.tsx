@@ -13,6 +13,7 @@ import Modal, { ModalFooter } from "@/components/Modal/Modal";
 import ProfileLine from "@/components/Profile/ProfileLine";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { useDialogFocus } from "@/hooks/useDialogFocus";
+import { languages } from "@/translation/i18n";
 import Section, { type LineInfos } from "@/users/components/Section";
 
 import { Language, type User } from "../api/users";
@@ -68,11 +69,8 @@ export default function Profile({
     };
 
     const LanguageDisplay: string =
-        user.language === Language.fr
-            ? "Francais"
-            : user.language === Language.en
-                ? "English"
-                : "汉语";
+        languages.find((lng) => Language[lng.code] === user.language)?.label ??
+        languages[1].label;
 
     const Lines: LineInfos[] = [
         {
@@ -143,8 +141,8 @@ export default function Profile({
                     onClose={() => {
                         setShowEmail(false);
                     }}
-                    title={"Change Email"}
-                    subtitle={"Enter the current password, then the new email"}
+                    title={t("profile.changeEmail")}
+                    subtitle={t("profile.changeEmailHint")}
                 >
                     <fetcher.Form
                         action="/me/email"
@@ -168,9 +166,9 @@ export default function Profile({
                                 maxLength={255}
                                 minLength={8}
                                 name="New email"
-                                label={"New email"}
+                                label={t("profile.newEmail")}
                                 required
-                                placeholder={"new email"}
+                                placeholder={t("profile.newEmailPlaceholder")}
                             />
                         </div>
                         <ModalFooter>
@@ -180,7 +178,7 @@ export default function Profile({
                                 type="submit"
                                 pending={fetcher.state !== "idle"}
                             >
-                                {"Change Email"}
+                                {t("profile.changeEmail")}
                             </CheckButton>
                         </ModalFooter>
                     </fetcher.Form>
@@ -254,56 +252,24 @@ export default function Profile({
                         onClose={() => {
                             setShowLanguage(false);
                         }}
-                        rows={[
-                            {
-                                id: "Francais",
-                                onClick: (): void => {
-                                    void fetcher.submit(
-                                        { language: Language.fr },
-                                        {
-                                            method: "PATCH",
-                                            action: "/me/language",
-                                        },
-                                    );
-                                    void i18n.changeLanguage(
-                                        Language[user.language],
-                                    );
-                                },
-                                content: <h1>🇫🇷 | Francais</h1>,
+                        rows={languages.map((lng) => ({
+                            id: lng.code,
+                            onClick: (): void => {
+                                void fetcher.submit(
+                                    { language: Language[lng.code] },
+                                    {
+                                        method: "PATCH",
+                                        action: "/me/language",
+                                    },
+                                );
+                                void i18n.changeLanguage(lng.code);
                             },
-                            {
-                                id: "English",
-                                onClick: (): void => {
-                                    void fetcher.submit(
-                                        { language: Language.en },
-                                        {
-                                            method: "PATCH",
-                                            action: "/me/language",
-                                        },
-                                    );
-                                    void i18n.changeLanguage(
-                                        Language[user.language],
-                                    );
-                                },
-                                content: <h1>🇬🇧 | English</h1>,
-                            },
-                            {
-                                id: "汉语",
-                                onClick: (): void => {
-                                    void fetcher.submit(
-                                        { language: Language.tc },
-                                        {
-                                            method: "PATCH",
-                                            action: "/me/language",
-                                        },
-                                    );
-                                    void i18n.changeLanguage(
-                                        Language[user.language],
-                                    );
-                                },
-                                content: <h1>🇹🇼 | 汉语</h1>,
-                            },
-                        ]}
+                            content: (
+                                <h1>
+                                    {lng.flag} | {lng.label}
+                                </h1>
+                            ),
+                        }))}
                     ></PopupList>
                 )}
                 <button

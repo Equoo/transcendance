@@ -24,12 +24,15 @@ export function AuthTitle({
 	nameLink: string;
 	link: string;
 }): JSX.Element {
+	// eslint-disable-next-line id-length
+	const { t } = useTranslation();
+
 	return (
 		<div className="flex flex-col items-center lg:items-start">
 			<h3 className="text-text2 font-bold tracking-tight">{top}</h3>
 			<h1 className="text-5xl sm:text-6xl font-semibold font-head text-text tracking-tight text-center lg:text-left">
 				{mid}
-				<span className=" text-accent">.</span>
+				<span className=" text-accent">{t("common.fullStop")}</span>
 			</h1>
 			<h3 className="text-text font-head">
 				{bot}

@@ -40,7 +40,7 @@ export default function StatTile({
 			</div>
 			<div className="flex flex-col min-w-0">
 				<span className="font-head font-bold text-2xl text-text tabular-nums leading-tight">{value}</span>
-				<span className="text-[13px] text-text2 truncate">{label}</span>
+				<span className="text-[13px] text-text2 leading-snug wrap-break-word">{label}</span>
 			</div>
 		</Link>
 	);

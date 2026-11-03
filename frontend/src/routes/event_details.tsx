@@ -19,6 +19,7 @@ import UserLine from "@/components/Profile/UserLine";
 import RoleChange from "@/events/components/RoleChange";
 import UnregisterUser from "@/events/components/UnregisterUser";
 import { dateLocale } from "@/translation/i18n";
+import { roleLabel } from "@/utils/role.util";
 
 import { PermEnum } from "../admin/api/roles";
 import Badge from "../components/Badge";
@@ -27,6 +28,7 @@ import { fetchEvent, formatEventSize } from "../events/api/events.api";
 import EventForm from "../events/components/EventForm";
 import EventRegisterBtn from "../events/components/EventRegisterBtn";
 import { fetchFiles } from "../files/api/files.api";
+import { formatSize } from "../files/components/UploadDropzone";
 import { HEADER_PADDING } from "../friends/components/BackToList";
 import { UserContext } from "../users/api/users";
 import type { Route } from "./+types/event_details";
@@ -50,9 +52,9 @@ export default function EventDetails({
 	loaderData: { event, roles, files, user },
 }: Route.ComponentProps): JSX.Element {
 	// eslint-disable-next-line id-length
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const navigate = useNavigate();
-	const dateString: string = new Date(event.date).toLocaleString(dateLocale(), {
+	const dateString: string = new Date(event.date).toLocaleString(dateLocale(i18n.language), {
 		hour: "2-digit",
 		minute: "2-digit",
 		month: "short",
@@ -200,7 +202,7 @@ export default function EventDetails({
 									<ModalListItem key={reg.user.id}>
 										<UserLine
 											user={reg.user}
-											subtitle={reg.user.role.name}
+											subtitle={roleLabel(t, reg.user.role.name)}
 										/>
 										{Boolean(
 											user.role.permission &
@@ -257,17 +259,7 @@ export default function EventDetails({
 										)}
 									</p>
 									<p className="text-xs ml-auto shrink-0">
-										{file.length / 1000000 < 1
-											? t("files.sizeKb", {
-													size: Math.floor(
-														file.length / 1000,
-													),
-												})
-											: t("files.sizeMb", {
-													size: Math.floor(
-														file.length / 1000000,
-													),
-												})}
+										{formatSize(file.length, t)}
 									</p>
 									<PiArrowBendUpRight
 										className="ml-2 pb-1"

@@ -30,8 +30,8 @@ interface MessageRowProps {
 	onClickReply?: (msg: Message) => void;
 }
 
-function formatTimestamp(date: Date): string {
-	return date.toLocaleString(dateLocale(), {
+function formatTimestamp(date: Date, lng: string): string {
+	return date.toLocaleString(dateLocale(lng), {
 		hour: "2-digit",
 		minute: "2-digit",
 		month: "2-digit",
@@ -53,7 +53,7 @@ function MessageRow({
 	onClickReply,
 }: MessageRowProps): JSX.Element {
 	// eslint-disable-next-line id-length
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const user = useUser();
 	const sender = resolveUser(message.sender, user);
 	const [showWatch, setShowWatch] = useState(false);
@@ -107,7 +107,7 @@ function MessageRow({
 							{displayName(sender, relations)}
 						</span>
 						<span className="shrink-0 text-[11.5px] text-muted">
-							{formatTimestamp(new Date(message.sentAt))}
+							{formatTimestamp(new Date(message.sentAt), i18n.language)}
 						</span>
 					</div>
 				)}

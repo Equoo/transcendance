@@ -2,13 +2,10 @@ import { type JSX, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PiCaretDown } from "react-icons/pi";
 
+import { languages } from "@/translation/i18n";
+
 import PopupList from "./List/PopupList";
 
-const languages = [
-	{ code: "fr", flag: "🇫🇷", label: "Francais" },
-	{ code: "en", flag: "🇬🇧", label: "English" },
-	{ code: "tc", flag: "🇹🇼", label: "汉语" },
-];
 
 export default function LanguageSwitcher({
 	className = "relative",

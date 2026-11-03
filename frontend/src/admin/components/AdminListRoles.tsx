@@ -12,6 +12,7 @@ import ChangeModal from "@/components/Modal/ChangeModal";
 import ChoiceModal from "@/components/Modal/ChoiceModal";
 import { useUser } from "@/users/hooks/users";
 import { toastError } from "@/utils/error.util";
+import { roleLabel } from "@/utils/role.util";
 
 import { PermEnum, type Role } from "../api/roles";
 import { RolesBox } from "./AdminRoleBox";
@@ -105,7 +106,7 @@ export default function ListRoles({
                         id={role.id}
                     ></ChoiceModal>
                 )}
-                {role.name}
+                {roleLabel(t, role.name)}
             </ListCell>
             {checkboxes.map((check, index) => (
                 <RolesBox

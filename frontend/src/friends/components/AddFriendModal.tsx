@@ -9,6 +9,7 @@ import Modal from "@/components/Modal/Modal";
 import ProfilePic from "@/components/Profile/ProfilePic";
 import type { User } from "@/users/api/users";
 import { useUser } from "@/users/hooks/users";
+import { roleLabel } from "@/utils/role.util";
 
 import { type Relationship, RelationshipState } from "../api/relationship.api";
 import {
@@ -140,7 +141,7 @@ export default function AddFriendModal({
 									{user.userName}
 								</span>
 								<span className="text-muted text-[12.5px]">
-									{user.role.name}
+									{roleLabel(t, user.role.name)}
 								</span>
 							</div>
 							<UserAction

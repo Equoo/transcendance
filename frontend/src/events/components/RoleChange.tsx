@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useFetcher } from "react-router";
 
 import { Select } from "@/components/Input/Select";
+import { roleLabel } from "@/utils/role.util";
 
 import type { EventData } from "../api/events.api";
 import type { Registration } from "../api/registrations.api";
@@ -29,7 +30,7 @@ export default function RoleChange({
 			}
 			options={event.eventRoles.map((er) => ({
 				value: er.id,
-				label: er.name,
+				label: roleLabel(t, er.name),
 			}))}
 			onChange={(value) => {
 				const role = event.eventRoles.find((er) => er.id === value);
@@ -49,7 +50,7 @@ export default function RoleChange({
 						toast.success(
 							t("eventDetails.roleChangeSuccess", {
 								name: registration.user.userName,
-								role: role?.name,
+								role: role && roleLabel(t, role.name),
 							}),
 							{ duration: 2000 },
 						);

@@ -1,3 +1,4 @@
+import i18n from "i18next";
 import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import { Form, Link, redirect, useLocation } from "react-router";
@@ -5,6 +6,7 @@ import { Form, Link, redirect, useLocation } from "react-router";
 import { AuthForm, AuthLogo, AuthTitle } from "../../auth/components/AuthForm";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
 import { LegalLinks } from "../../legal/components/LegalPage";
+import { Language, userChangeLanguage } from "../../users/api/users";
 import { registerUser } from "../api/auth";
 import type { Route } from "./+types/register";
 
@@ -15,6 +17,14 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 
 	if (!res.ok) {
 		return res.error;
+	}
+
+	// New accounts start in English: keep the language picked on this page.
+	const language = Language[i18n.language as keyof typeof Language];
+	if (language !== Language.en) {
+		const languageForm = new FormData();
+		languageForm.set("language", String(language));
+		await userChangeLanguage(languageForm).catch(() => null);
 	}
 	return redirect("/");
 }
@@ -67,7 +77,7 @@ export default function Register({
 						>
 							{t("legal.privacy.title")}
 						</Link>
-						.
+						{t("common.fullStop")}
 					</p>
 				</Form>
 			</div>
