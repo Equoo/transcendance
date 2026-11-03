@@ -41,7 +41,7 @@ services:
       - Authentication__DefaultAdminEmail=${ADMIN_EMAIL:?set ADMIN_EMAIL in .env}
       - Authentication__DefaultAdminPwd=${ADMIN_PASSWORD:?set ADMIN_PASSWORD in .env}
       - Authentication__JWTKey=${JWT_KEY:?set JWT_KEY in .env}
-      - Ai__ServiceUrl=http://ai-back-dev:7070
+      - Ai__ServiceUrl=http://ai-back:7070
 
   database:
     image: postgres:alpine
@@ -86,7 +86,7 @@ services:
   ai-backend:
     build: ./backend-ia
     container_name: keepgrouped-ai-backend
-    hostname: ai-back-dev
+    hostname: ai-back
     restart: unless-stopped
     depends_on:
       - chromadb
