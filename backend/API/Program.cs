@@ -1,3 +1,4 @@
+using KeepGrouped.API.Activities;
 using KeepGrouped.API.Channels;
 using KeepGrouped.API.AiBackend;
 using KeepGrouped.API.Events;
@@ -47,6 +48,7 @@ class Program
         {
             options.PayloadSerializerOptions.Converters.Add(new NulFreeStringConverter());
         });
+        builder.Services.AddSingleton<ConnectionTracker>();
 
 		if (builder.Environment.IsDevelopment())
 		{

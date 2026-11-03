@@ -16,8 +16,26 @@ static class MessagesDb
 }
 
 [Authorize]
-public class KeepGroupedHub(KeepGroupedDb db) : Hub
+public class KeepGroupedHub(KeepGroupedDb db, ConnectionTracker connections) : Hub
 {
+	public override async Task OnConnectedAsync()
+	{
+		if (Context.UserIdentifier is { } userId)
+		{
+			connections.Add(userId);
+		}
+		await base.OnConnectedAsync();
+	}
+
+	public override async Task OnDisconnectedAsync(Exception? exception)
+	{
+		if (Context.UserIdentifier is { } userId && connections.Remove(userId))
+		{
+			await Clients.All.SendAsync("OtherActivityUpdated", userId, ActivityEnum.Offline);
+		}
+		await base.OnDisconnectedAsync(exception);
+	}
+
 	public async Task ActivityReported(ActivityEnum activity)
 	{
 		var userId = Context.UserIdentifier;

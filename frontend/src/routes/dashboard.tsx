@@ -37,7 +37,6 @@ function handleVisibility(): void {
 
 function handleUnload(): undefined {
 	unloading = true;
-	void useActivity.getState().setSelfActivity(ActivityEnum.Offline);
 
 	// eslint-disable-next-line no-undefined
 	return undefined;

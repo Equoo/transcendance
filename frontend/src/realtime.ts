@@ -69,7 +69,11 @@ export async function hubSend(
 	if (connection.state !== HubConnectionState.Connected) {
 		return;
 	}
-	await connection.send(method, ...args);
+	try {
+		await connection.send(method, ...args);
+	} catch (error) {
+		console.warn(`Realtime ${method} not sent:`, error);
+	}
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
