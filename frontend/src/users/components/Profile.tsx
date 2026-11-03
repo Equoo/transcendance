@@ -34,6 +34,7 @@ export default function Profile({
     // eslint-disable-next-line id-length
     const { i18n, t } = useTranslation();
 
+    const IsSuperAdmin = user.role.name === "\\(*-*)/";
     const [showDelete, setShowDelete] = useState(false);
     const [showUsername, setShowUsername] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -77,13 +78,13 @@ export default function Profile({
         {
             name: t("profile.username"),
             value: user.userName,
-            action: openUsername,
+            action: !IsSuperAdmin ? openUsername : undefined,
         },
-        { name: t("profile.email"), value: user.email, action: openEmail },
+        { name: t("profile.email"), value: user.email, action: !IsSuperAdmin ? openEmail : undefined },
         {
             name: t("profile.password"),
             value: "***********",
-            action: openPassword,
+            action: !IsSuperAdmin ? openPassword : undefined,
         },
         {
             name: t("profile.language"),
