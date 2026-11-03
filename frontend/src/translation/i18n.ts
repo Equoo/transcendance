@@ -61,17 +61,26 @@ function detectLanguage(): string {
 	return "en";
 }
 
+// The SPA shell is prerendered in English: start in English so the first
+// client render matches it, then switch with applyDetectedLanguage().
 void i18n.use(initReactI18next).init({
 	resources,
 
-	lng: detectLanguage(),
+	lng: "en",
 	fallbackLng: "en",
+	initAsync: false,
 
 	interpolation: {
 		escapeValue: false,
 	},
 });
-i18n.use(initReactI18next);
+
+export function applyDetectedLanguage(): void {
+	const lng = detectLanguage();
+	if (lng !== i18n.language) {
+		void i18n.changeLanguage(lng);
+	}
+}
 
 const htmlLang: Record<string, string> = { en: "en", fr: "fr", tc: "zh-TW" };
 
@@ -89,18 +98,10 @@ export function dateFnsLocale(lng: string): Locale {
 	return dateFnsLocales[lng] ?? enUS;
 }
 
-function syncHtmlLang(lng: string): void {
-	if (typeof document !== "undefined") {
-		document.documentElement.lang = htmlLang[lng] ?? "en";
-	}
-}
-
 i18n.on("languageChanged", (lng) => {
-	syncHtmlLang(lng);
 	if (typeof window !== "undefined") {
 		storeLanguage(lng);
 	}
 });
-syncHtmlLang(i18n.language);
 
 export default i18n;

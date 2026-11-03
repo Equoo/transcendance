@@ -1,10 +1,10 @@
 import "./index.css";
-import "./translation/i18n";
 
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import type { JSX, ReactNode } from "react";
+import { type JSX, type ReactNode, useEffect } from "react";
 import { type DefaultToastOptions, Toaster } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import {
 	Links,
 	Meta,
@@ -19,6 +19,7 @@ import { PermEnum } from "./admin/api/roles";
 import HydratingScreen from "./components/HydratingScreen";
 import { useViewportHeight } from "./hooks/useViewportHeight";
 import { queryClient } from "./queryClient";
+import { applyDetectedLanguage, dateLocale } from "./translation/i18n";
 import { fetchUser, UserContext } from "./users/api/users";
 
 const toastOptions: DefaultToastOptions = {
@@ -100,8 +101,14 @@ export const clientMiddleware: Route.MiddlewareFunction[] = [
 ];
 
 export function Layout({ children }: { children: ReactNode }): JSX.Element {
+	const { i18n } = useTranslation();
+
+	useEffect(() => {
+		applyDetectedLanguage();
+	}, []);
+
 	return (
-		<html lang="en">
+		<html lang={dateLocale(i18n.language)}>
 			<head>
 				<meta charSet="UTF-8" />
 				<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
